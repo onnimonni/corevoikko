@@ -34,7 +34,9 @@ def diagnostics(checker, text):
         word = token.tokenText
         if text[offset:offset + len(word)] != word:
             raise RuntimeError("Tokenizer lost text alignment")
-        if token.tokenType == Token.WORD:
+        # Letterless tokens (Y-tunnus 1234567-8, phone numbers, ISO dates) are
+        # identifiers, not words that can be misspelled.
+        if token.tokenType == Token.WORD and any(c.isalpha() for c in word):
             valid = checker.spell(word)
             if not valid and text[offset + len(word):offset + len(word) + 1] == ".":
                 # The default tokenizer leaves abbreviation/date dots separate.

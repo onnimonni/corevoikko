@@ -90,9 +90,6 @@ legitimate plain-text policies (`limitation:false-negative`):
   Colons before lists and commas/semicolons on list lines are legitimate.
 - An unclosed opening parenthesis is not reported; only a stray closing one
   (code 12) is. List markers such as `a)` make naive pairing unreliable.
-- Identifier and ISO-date tokens such as Y-tunnus `1234567-8`, `040-1234567`
-  and `2026-10-03` are rejected by spelling (`limitation:false-positive`), as
-  is `GDPR` (`coverage:dictionary`); `31.12.2026` and `ABC-vaatimuksia` pass.
 
 ### Retained fixes
 
@@ -138,6 +135,11 @@ legitimate plain-text policies (`limitation:false-negative`):
   capitalized name words before it. `Oy`/`Oyj`/`Ab`/`Abp`/`Ky`/`Ay`/`Tmi` and
   the capitalized run ending in one are now accepted. A capitalized common
   noun outside such a run is still reported.
+- VOIKKO-015 (`coverage:dictionary` + `integration:spelling-adapter`): added
+  `GDPR` as an abbreviation with front-vowel endings (`GDPR:ää`, `GDPR:ssä`;
+  `GDPR:aa` and `GDRP` stay rejected). The adapter no longer spell-checks
+  letterless tokens such as Y-tunnus `1234567-8`, `040-1234567` and ISO dates;
+  tokens with letters, e.g. `kissa2`, are still checked.
 
 Current frozen-corpus result: **0 false positives**, **0 missed supported
 errors**, **27 detections**, **21/21 corrections**, **8 unsupported checks**.
