@@ -2161,6 +2161,8 @@ LEXICON Summayhdyssanat
 [Ln][Xp]laulaja-kitaristi[X]laulaja-[Bm]kitarist:laulaja-kitarist	NimisanaRisti_a	;
 
 LEXICON Poikkeavat_em
+! Kela: Kansaneläkelaitos (Finland's social insurance institution); not only the common noun "kela" (reel).
+[Lem][Xp]Kela[X]kel:kel	NimiKala_a	;
 [Lem][Xp]Xinhua[X]xinhu:xinhu	NimiPeruna_a	;
 
 LEXICON Poikkeavat_ep

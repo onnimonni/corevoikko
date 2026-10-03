@@ -112,6 +112,12 @@ legitimate plain-text policies (`limitation:false-negative`):
   (`Kirjaamo` vs `kirjaamoon`), and dictionary gaps — the prefix *toisio-*
   (`toisiolaki`, `toisiokäyttö`), standalone `PDF`/`pdf`, `PL` (postilokero),
   programme names `Eepos`, `Kanta`.
+- Authority names (`coverage:dictionary-config`): vocabulary entries flagged
+  `orgname` (e.g. `Fimea`, `Valvira`) are excluded from the default standard
+  build; building with `GENLEX_OPTS=--extra-usage=orgname` includes them.
+  Others (`Verohallinto`, `Traficom`, `Tilastokeskus`) are absent altogether.
+- `Digi- ja väestötietovirasto` gets code 6 on `Digi-`: a capitalized
+  suspended compound part starting a name is indistinguishable from a slip.
 - Document structure (`limitation:document-structure`): the CLI applies one
   profile per file. Headings and list items need `title`/`list` profiles,
   which require structure from the source format (HTML/DOCX), not plain text.
@@ -180,6 +186,10 @@ legitimate plain-text policies (`limitation:false-negative`):
   TLDs (`tietosuoja.fi`, `kela.fi`) are not spell-checked; a hyphen-attached
   ending is (`Suomi.fi-tunnisteella` passes, `…-tunnisteela` is flagged). A
   missing space after a full stop (`kissa.koira`) is still reported.
+- VOIKKO-019 (`coverage:dictionary`): `Kela` (Kansaneläkelaitos) added as a
+  proper noun in `vvfst/poikkeavat.lexc` with the same `kala` inflection as the
+  common noun *kela* ("reel"), which was the only entry. A single `Kelan` or
+  `Kelalle` no longer gets code 6; lowercase *kelalla* is still accepted.
 
 Current frozen-corpus result: **0 false positives**, **0 missed supported
 errors**, **27 detections**, **21/21 corrections**, **8 unsupported checks**.

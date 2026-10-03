@@ -71,6 +71,14 @@ class TextCheckerTest(unittest.TestCase):
             self.assertEqual([("spelling", word)],
                              [(e["kind"], e["text"]) for e in diagnostics(self.checker, text)])
 
+    def testKelaIsAProperNoun(self):
+        configure(self.checker, "prose")
+        # One mention: the document-name policy cannot apply, the lexicon must.
+        for text in ("Tiedot ovat Kelan rekisterissä.", "Lähetä hakemus Kelalle."):
+            self.assertEqual([], diagnostics(self.checker, text), text)
+        # The common noun "kela" (reel) is still accepted in lowercase.
+        self.assertEqual([], diagnostics(self.checker, "Lanka on kelalla."))
+
 
 if __name__ == "__main__":
     unittest.main()
