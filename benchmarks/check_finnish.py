@@ -30,16 +30,21 @@ _established = None
 
 def compound_readings(checker, word):
     """Per analysis: (first-part base, rest of base form, first-part surface), or
-    None when that analysis is not a compound (single lexeme or derivation)."""
+    None when that analysis has fewer than two lexical parts (a single lexeme or
+    a derivation). Compound analyses whose first part is itself derived
+    (myy+nti+edistäjä) are omitted: they neither block nor support a reading.
+    Proper-name readings (Kansakorkeakoulu) are omitted for lowercase words."""
     readings = []
     for analysis in checker.analyze(word):
+        if word[:1].islower() and analysis.get("CLASS") == "nimi":
+            continue
         segments = _SEGMENT.findall(analysis.get("WORDBASES", ""))
         base = analysis.get("BASEFORM", "").lower()
-        if len(segments) < 2 or segments[1][1].startswith("+"):
+        if sum(not s[1].startswith("+") for s in segments) < 2:
             readings.append(None)
-            continue
-        surface, first_base = segments[0][0].lower(), segments[0][1].lower()
-        readings.append((first_base, base[len(surface):], surface) if base.startswith(surface) else None)
+        elif not segments[1][1].startswith("+"):
+            surface, first_base = segments[0][0].lower(), segments[0][1].lower()
+            readings.append((first_base, base[len(surface):], surface) if base.startswith(surface) else None)
     return readings
 
 
@@ -65,6 +70,9 @@ def established_compound_suggestions(checker, word):
         return []
     suggestions = set()
     for first_base, rest, surface in readings:
+        # The word itself may be a listed non-lemma headword (maateitse).
+        if surface in _established.get(f"{first_base}|{word.lower()[len(surface):]}", ()):
+            return []
         forms = _established.get(f"{first_base}|{rest}")
         if forms is None:
             continue

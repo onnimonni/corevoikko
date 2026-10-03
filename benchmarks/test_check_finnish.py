@@ -124,6 +124,9 @@ class TextCheckerTest(unittest.TestCase):
         text = "Asiakkaansuhteen aikana rekisteripitäjän on suojattava tiedot."
         self.assertEqual([("Asiakkaansuhteen", ["Asiakassuhteen"]), ("rekisteripitäjän", ["rekisterinpitäjän"])],
                          [(e["text"], e["suggestions"]) for e in diagnostics(self.checker, text)])
+        # A second, derivational reading (myy+nti+edistäjä) must not hide the error.
+        self.assertEqual([("myyntiedistäjä", ["myynninedistäjä"])],
+                         [(e["text"], e["suggestions"]) for e in diagnostics(self.checker, "Hän on myyntiedistäjä.")])
         # Established forms, comparatives and unlisted compounds stay clean.
         for text in ("Asiakassuhteen aikana rekisterinpitäjän on suojattava tiedot.",
                      "Ostimme suurempikokoisen kissakoiran.",

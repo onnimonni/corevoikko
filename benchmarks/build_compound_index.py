@@ -42,10 +42,18 @@ def main():
         for word in kotus + joukahainen:
             if not (word.isalpha() and word.islower()):
                 continue
+            nominative = any(a.get("SIJAMUOTO") == "nimento" for a in checker.analyze(word))
             for reading in compound_readings(checker, word):
                 if reading:
                     first_base, rest, surface = reading
-                    compounds.setdefault(f"{first_base}|{rest}", set()).add(surface)
+                    keys = {rest}
+                    if surface + rest != word:
+                        # Not its own base form: index its surface; also its base
+                        # form only if nominative (luonnonantimet), not for a
+                        # lexicalized case form (maateitse, base "maatie").
+                        keys = {word[len(surface):]} | ({rest} if nominative else set())
+                    for key in keys:
+                        compounds.setdefault(f"{first_base}|{key}", set()).add(surface)
     finally:
         checker.terminate()
 

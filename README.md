@@ -252,12 +252,16 @@ legitimate plain-text policies (`limitation:false-negative`):
   `rekisterinpitäjän`. Voikko accepts these because both linkings are
   morphologically valid. "Established" = a compound in Kotus's *Nykysuomen
   sanalista 2024* or a lexicalized (`=`) compound in `joukahainen.xml`;
-  compounds absent from both are never flagged. Measured: 458/500 swapped-
-  linking typos caught with the correct suggestion (most misses are themselves
-  valid words); false alarms on 0 of 94,213 Kotus headwords, 0 of 5,656
+  compounds absent from both are never flagged. Measured on 500 typos made by
+  swapping a genitive first part to nominative in random Kotus compounds:
+  471 caught with the correct suggestion (e.g. `myyntiedistäjä` →
+  `myynninedistäjä`); of the 29 misses, 26 are themselves listed valid words
+  (`aurinkovarjo`), 2 are valid inflections of other words (`ukkosieni`,
+  `rintamitta`) and 1 derives from a valid word (`vierasvoittoisesti`). False
+  alarms: 0 of 94,213 Kotus headwords, 0 of 5,656
   Joukahainen compounds, 0 of 1,177 real-policy words, 1 of 2,776 upstream
   spell.txt words (`miehenkuva`: both linkings valid, only `mieskuva` listed).
-  The derived index `benchmarks/data/established_compounds.json.gz` (248 KB)
+  The derived index `benchmarks/data/established_compounds.json.gz` (253 KB)
   is committed; rebuild with
   `python benchmarks/build_compound_index.py --kotus nykysuomensanalista2024.csv`.
   Source: Kotimaisten kielten keskus, Nykysuomen sanalista 2024,
