@@ -92,6 +92,8 @@ spelling/grammar result establishes privacy-law compliance or factual accuracy.
   supported errors before and after a long sentence retain their original spans.
 - VOIKKO-006: the Python binding accepts CRLF paragraph endings without feeding
   CR to grammar rules; diagnostic spans still refer to the original input.
+- VOIKKO-003: URL tokens leave terminal `.`, `!` and `?` as sentence punctuation,
+  while query separators and parameters inside URLs remain intact.
 
 
 ### Reviewed public sources

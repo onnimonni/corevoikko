@@ -189,6 +189,15 @@ class LibvoikkoTest(unittest.TestCase):
         self.assertEqual([(1, len(prefix) + 5, 11)],
                          [(e.errorCode, e.startPos, e.errorLen) for e in errors])
 
+    def testUrlTerminalPunctuationPreservesQuery(self):
+        url = u"https://example.fi/?a=1&b=2"
+        for punctuation in (u".", u"!", u"?"):
+            tokens = self.voikko.tokens(url + punctuation)
+            self.assertEqual([(url, Token.WORD), (punctuation, Token.PUNCTUATION)],
+                             [(t.tokenText, t.tokenType) for t in tokens])
+        text = u"Löytyvätkö tiedot osoitteesta https://www.kela.fi/tietosuoja?"
+        self.assertEqual([], self.voikko.grammarErrors(text, "fi"))
+
     def testAnalyze(self):
         analysisList = self.voikko.analyze(u"kansaneläkehakemus")
         self.assertEqual(1, len(analysisList))
