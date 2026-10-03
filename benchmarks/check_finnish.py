@@ -183,7 +183,7 @@ def _multiword_name(checker, prev, word):
                                           and a.get("SIJAMUOTO") == "nimento" for a in checker.analyze(prev))
 
 
-# A register snapshot older than this may miss newly registered companies.
+# Default: a register snapshot older than this may miss newly registered companies.
 REGISTER_MAX_AGE_DAYS = 30
 
 
@@ -208,11 +208,12 @@ def _company_diagnostics(checker, text):
         description = (f"Yritystä ei löydy kaupparekisteristä (PRH, tilanne "
                        f"{as_of.day}.{as_of.month}.{as_of.year}): tarkista nimi.")
         age = (datetime.date.today() - as_of).days
-        if age > REGISTER_MAX_AGE_DAYS:
+        stale = age > getattr(checker, "_register_max_age_days", REGISTER_MAX_AGE_DAYS)
+        if stale:
             description += f" Rekisteritieto on {age} päivää vanha: uusi yritys voi puuttua."
         result.append({"kind": "name", "code": None, "start": start, "end": end, "text": text[start:end],
                        "description": description, "as_of": names.register_date,
-                       "stale": age > REGISTER_MAX_AGE_DAYS, "suggestions": []})
+                       "stale": stale, "suggestions": []})
     return result
 
 
@@ -500,6 +501,8 @@ def main():
     parser.add_argument("--profile", choices=["prose", "title", "list", "message"], default="prose")
     parser.add_argument("--names", type=Path,
                         help="Name Bloom filter from build_name_filter.py (company/product names)")
+    parser.add_argument("--register-max-age-days", type=int, default=REGISTER_MAX_AGE_DAYS,
+                        help="Mark unknown-company findings stale when the PRH snapshot is older (default: %(default)s)")
     args = parser.parse_args()
     # Do not silently load a system libvoikko if the benchmark library is missing.
     library_name = "libvoikko.1.dylib" if sys.platform == "darwin" else "libvoikko.so.1"
@@ -512,6 +515,7 @@ def main():
             configure(checker, args.profile)
             if args.names:
                 checker._names = NameFilter.load(args.names)
+                checker._register_max_age_days = args.register_max_age_days
             print(json.dumps(diagnostics(checker, args.text_file.read_bytes().decode("utf-8")), ensure_ascii=False, indent=2))
         else:
             benchmark(checker, args.corpus, args.report, args.dictionary)

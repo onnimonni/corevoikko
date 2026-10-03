@@ -96,6 +96,9 @@ class NameFilterCheckerTest(unittest.TestCase):
         self.assertNotIn("päivää vanha", finding(30)["description"])
         self.assertTrue(finding(31)["stale"])
         self.assertIn("Rekisteritieto on 31 päivää vanha", finding(31)["description"])
+        self.checker._register_max_age_days = 7
+        self.assertFalse(finding(7)["stale"])
+        self.assertTrue(finding(8)["stale"])
 
     def testSnapshotDateComesFromPrhZip(self):
         from build_name_filter import prh_names
