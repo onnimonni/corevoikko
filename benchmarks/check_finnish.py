@@ -1,5 +1,6 @@
 """Offline Finnish checker and span-scored accuracy benchmark using upstream bindings."""
 import argparse
+import gzip
 import hashlib
 import json
 from pathlib import Path
@@ -20,6 +21,61 @@ DOMAIN = re.compile(r"(?i)^(?:[a-z0-9][a-z0-9-]*\.)+(?:fi|ax|eu|se|ee|no|dk|com|
 def _domain_valid(checker, word):
     match = DOMAIN.match(word)
     return bool(match) and (match.group("suffix") is None or checker.spell(match.group("suffix")))
+
+
+COMPOUND_INDEX = ROOT / "benchmarks/data/established_compounds.json.gz"
+_SEGMENT = re.compile(r"\+([^+(]+)\(([^)]*)\)")
+_established = None
+
+
+def compound_readings(checker, word):
+    """Per analysis: (first-part base, rest of base form, first-part surface), or
+    None when that analysis is not a compound (single lexeme or derivation)."""
+    readings = []
+    for analysis in checker.analyze(word):
+        segments = _SEGMENT.findall(analysis.get("WORDBASES", ""))
+        base = analysis.get("BASEFORM", "").lower()
+        if len(segments) < 2 or segments[1][1].startswith("+"):
+            readings.append(None)
+            continue
+        surface, first_base = segments[0][0].lower(), segments[0][1].lower()
+        readings.append((first_base, base[len(surface):], surface) if base.startswith(surface) else None)
+    return readings
+
+
+def _is_linking_form(checker, surface, first_base):
+    """True if surface is the plain nominative or genitive singular of first_base
+    (not e.g. a comparative: suurempi-, kauniimman-)."""
+    return any(a.get("BASEFORM", "").lower() == first_base and a.get("NUMBER") == "singular"
+               and a.get("SIJAMUOTO") in ("nimento", "omanto") and a.get("COMPARISON") in (None, "positive")
+               for a in checker.analyze(surface))
+
+
+def established_compound_suggestions(checker, word):
+    """Suggest the established linking form when every reading of a compound
+    uses a nominative/genitive first part that no established compound with the
+    same parts uses: asiakkaansuhteen -> asiakassuhteen, rekisteripitäjän ->
+    rekisterinpitäjän. Compounds absent from the index are never flagged.
+    Known risk: both linkings valid but only one listed (miehenkuva/mieskuva)."""
+    global _established
+    if _established is None:
+        _established = json.loads(gzip.decompress(COMPOUND_INDEX.read_bytes()))["compounds"]
+    readings = compound_readings(checker, word)
+    if not readings or None in readings or "'" in word or "’" in word:
+        return []
+    suggestions = set()
+    for first_base, rest, surface in readings:
+        forms = _established.get(f"{first_base}|{rest}")
+        if forms is None:
+            continue
+        if surface in forms:
+            return []
+        for form in forms:
+            if not (_is_linking_form(checker, surface, first_base) and _is_linking_form(checker, form, first_base)):
+                continue
+            fixed = form + word[len(surface):].lower()
+            suggestions.add(fixed[:1].upper() + fixed[1:] if word[:1].isupper() else fixed)
+    return sorted(suggestions)
 
 
 def configure(checker, profile):
@@ -117,6 +173,9 @@ def diagnostics(checker, text, document_names=True):
             if not valid:
                 result.append({"kind": "spelling", "start": offset, "end": offset + len(word),
                                "text": word, "suggestions": checker.suggest(word)})
+            elif "-" not in word and (fixes := established_compound_suggestions(checker, word)):
+                result.append({"kind": "spelling", "start": offset, "end": offset + len(word),
+                               "text": word, "suggestions": fixes})
         offset += len(word)
     if offset != len(text):
         raise RuntimeError("Tokenizer did not consume the input")

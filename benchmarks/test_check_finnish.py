@@ -119,6 +119,17 @@ class TextCheckerTest(unittest.TestCase):
                          [self.checker.spell(w) for w in ("PDF", "pdf", "PDF:nä", "pdf-tiedosto",
                                                           "PDF-tiedostona", "PDF:na")])
 
+    def testNonEstablishedCompoundLinkingIsReported(self):
+        configure(self.checker, "prose")
+        text = "Asiakkaansuhteen aikana rekisteripitäjän on suojattava tiedot."
+        self.assertEqual([("Asiakkaansuhteen", ["Asiakassuhteen"]), ("rekisteripitäjän", ["rekisterinpitäjän"])],
+                         [(e["text"], e["suggestions"]) for e in diagnostics(self.checker, text)])
+        # Established forms, comparatives and unlisted compounds stay clean.
+        for text in ("Asiakassuhteen aikana rekisterinpitäjän on suojattava tiedot.",
+                     "Ostimme suurempikokoisen kissakoiran.",
+                     "Kansanedustaja vastasi."):
+            self.assertEqual([], diagnostics(self.checker, text), text)
+
 
 if __name__ == "__main__":
     unittest.main()

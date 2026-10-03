@@ -97,7 +97,8 @@ legitimate plain-text policies (`limitation:false-negative`):
   hits such as `Minä juoksema nopeasti.`
 - Valid-looking compounds can hide typos: `Ystävälisin` parses as *ystävä* +
   *lisin* (`limitation:compound-overgeneration`). Individual frequent cases go
-  to the autocorrect list (see VOIKKO-016).
+  to the autocorrect list (see VOIKKO-016); wrong nominative/genitive linking
+  (`asiakkaansuhde`, `rekisteripitäjä`) is caught by VOIKKO-027.
 - Suggestion ranking (`limitation:suggestion-ranking`): `tietosuja` never
   suggests `tietosuoja`, although it is generated (rank 6 of 15 collected).
   Candidates are ranked `priority × (discovery index + 5)` and only the top 5
@@ -244,6 +245,25 @@ legitimate plain-text policies (`limitation:false-negative`):
 - VOIKKO-026 (`coverage:dictionary`): `PDF ~ pdf` (both endorsed in
   Kielitoimiston ohjepankki's lyhenneluettelo) added with front-vowel endings:
   `PDF:nä`, `pdf-tiedosto`, `PDF-tiedostona` pass; `PDF:na` is rejected.
+- VOIKKO-027 (`integration:compound-linking`, adapter check): a compound whose
+  first part is nominative where the established word uses the genitive, or
+  vice versa, is reported as spelling with the established form as suggestion:
+  `asiakkaansuhteen` → `asiakassuhteen`, `rekisteripitäjän` →
+  `rekisterinpitäjän`. Voikko accepts these because both linkings are
+  morphologically valid. "Established" = a compound in Kotus's *Nykysuomen
+  sanalista 2024* or a lexicalized (`=`) compound in `joukahainen.xml`;
+  compounds absent from both are never flagged. Measured: 458/500 swapped-
+  linking typos caught with the correct suggestion (most misses are themselves
+  valid words); false alarms on 0 of 94,213 Kotus headwords, 0 of 5,656
+  Joukahainen compounds, 0 of 1,177 real-policy words, 1 of 2,776 upstream
+  spell.txt words (`miehenkuva`: both linkings valid, only `mieskuva` listed).
+  The derived index `benchmarks/data/established_compounds.json.gz` (248 KB)
+  is committed; rebuild with
+  `python benchmarks/build_compound_index.py --kotus nykysuomensanalista2024.csv`.
+  Source: Kotimaisten kielten keskus, Nykysuomen sanalista 2024,
+  https://kaino.kotus.fi/lataa/nykysuomensanalista2024.csv, licensed
+  CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/); the index is
+  derived from it, and the raw list is not redistributed.
 - VOIKKO-025's new `Poikkeavat_p` is verified compatible with the Sukija
   variant: its generator appends `Sukija_p` to `Sanasto_p` and keeps
   `Poikkeavat_p`; `vvfst-sukija` builds.
