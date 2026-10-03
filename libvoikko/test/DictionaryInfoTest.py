@@ -103,8 +103,8 @@ class DictionaryInfoTest(unittest.TestCase):
 		dicts = libvoikko.Voikko.listDicts(self.dataDir.getDirectory())
 		for dictionary in dicts:
 			if dictionary.language == u"dk":
-				self.assertEquals(info2.description, dictionary.description)
-				self.assertEquals(u"standard", dictionary.variant)
+				self.assertEqual(info2.description, dictionary.description)
+				self.assertEqual(u"standard", dictionary.variant)
 				return
 		self.fail(u"Should have found dk dictionary")
 

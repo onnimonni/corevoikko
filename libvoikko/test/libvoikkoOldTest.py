@@ -34,14 +34,14 @@ class LibvoikkoOldTest(unittest.TestCase):
 			self.voikko.spell(u"kissa")
 		# Init can be called multiple times
 		self.voikko.init()
-		self.failUnless(self.voikko.spell(u"kissa"))
+		self.assertTrue(self.voikko.spell(u"kissa"))
 		# Terminate can be called multiple times
 		self.voikko.terminate()
 		self.voikko.terminate()
 		self.assertRaises(libvoikkoOld.VoikkoException, trySpell)
 		# Initialization can be done again
 		self.voikko.init()
-		self.failUnless(self.voikko.spell(u"kissa"))
+		self.assertTrue(self.voikko.spell(u"kissa"))
 	
 	def testDictionaryComparisonWorks(self):
 		d1 = libvoikkoOld.Dictionary("a", u"b")
@@ -53,8 +53,8 @@ class LibvoikkoOldTest(unittest.TestCase):
 		self.assertNotEqual(d1, d2)
 		self.assertNotEqual(d1, d3)
 		self.assertEqual(d1, d4)
-		self.failUnless(d1 < d2)
-		self.failUnless(d2 < d3)
+		self.assertTrue(d1 < d2)
+		self.assertTrue(d2 < d3)
 	
 	def testDictionaryHashCodeWorks(self):
 		d1 = libvoikkoOld.Dictionary("a", u"b")
@@ -68,7 +68,7 @@ class LibvoikkoOldTest(unittest.TestCase):
 	def testListDicts(self):
 		self.voikko.terminate()
 		uninitedDicts = self.voikko.listDicts()
-		self.failUnless(len(uninitedDicts) > 0)
+		self.assertTrue(len(uninitedDicts) > 0)
 		standard = uninitedDicts[0]
 		self.assertEqual(u"standard", standard.variant,
 		     u"Standard dictionary must be the default in test environment.")
@@ -80,13 +80,13 @@ class LibvoikkoOldTest(unittest.TestCase):
 		# TODO: better test
 		self.voikko.terminate()
 		uninitedDicts = self.voikko.listDicts("/path/to/nowhere")
-		self.failUnless(len(uninitedDicts) > 0)
+		self.assertTrue(len(uninitedDicts) > 0)
 	
 	def testInitWithCorrectDictWorks(self):
 		# TODO: better test
 		self.voikko.terminate()
 		self.voikko.init(variant = "standard")
-		self.failUnless(self.voikko.spell(u"kissa"))
+		self.assertTrue(self.voikko.spell(u"kissa"))
 	
 	def testInitWithNonExistentDictThrowsException(self):
 		def tryInit():
@@ -98,21 +98,21 @@ class LibvoikkoOldTest(unittest.TestCase):
 		# TODO: better test
 		self.voikko.terminate()
 		self.voikko.init(cacheSize = 3)
-		self.failUnless(self.voikko.spell(u"kissa"))
+		self.assertTrue(self.voikko.spell(u"kissa"))
 	
 	def testInitWithPathWorks(self):
 		# TODO: better test
 		self.voikko.terminate()
 		self.voikko.init(path = "/path/to/nowhere")
-		self.failUnless(self.voikko.spell(u"kissa"))
+		self.assertTrue(self.voikko.spell(u"kissa"))
 	
 	def testSpell(self):
-		self.failUnless(self.voikko.spell(u"määrä"))
-		self.failIf(self.voikko.spell(u"määä"))
+		self.assertTrue(self.voikko.spell(u"määrä"))
+		self.assertFalse(self.voikko.spell(u"määä"))
 	
 	def testSuggest(self):
 		suggs = self.voikko.suggest(u"koirra")
-		self.failUnless(u"koira" in suggs)
+		self.assertTrue(u"koira" in suggs)
 	
 	def testSuggestReturnsArgumentIfWordIsCorrect(self):
 		suggs = self.voikko.suggest(u"koira")
@@ -174,60 +174,60 @@ class LibvoikkoOldTest(unittest.TestCase):
 	
 	def testSetIgnoreDot(self):
 		self.voikko.setIgnoreDot(False)
-		self.failIf(self.voikko.spell(u"kissa."))
+		self.assertFalse(self.voikko.spell(u"kissa."))
 		self.voikko.setIgnoreDot(True)
-		self.failUnless(self.voikko.spell(u"kissa."))
+		self.assertTrue(self.voikko.spell(u"kissa."))
 	
 	def testSetIgnoreNumbers(self):
 		self.voikko.setIgnoreNumbers(False)
-		self.failIf(self.voikko.spell(u"kissa2"))
+		self.assertFalse(self.voikko.spell(u"kissa2"))
 		self.voikko.setIgnoreNumbers(True)
-		self.failUnless(self.voikko.spell(u"kissa2"))
+		self.assertTrue(self.voikko.spell(u"kissa2"))
 	
 	def testSetIgnoreUppercase(self):
 		self.voikko.setIgnoreUppercase(False)
-		self.failIf(self.voikko.spell(u"KAAAA"))
+		self.assertFalse(self.voikko.spell(u"KAAAA"))
 		self.voikko.setIgnoreUppercase(True)
-		self.failUnless(self.voikko.spell(u"KAAAA"))
+		self.assertTrue(self.voikko.spell(u"KAAAA"))
 	
 	def testAcceptFirstUppercase(self):
 		self.voikko.setAcceptFirstUppercase(False)
-		self.failIf(self.voikko.spell("Kissa"))
+		self.assertFalse(self.voikko.spell("Kissa"))
 		self.voikko.setAcceptFirstUppercase(True)
-		self.failUnless(self.voikko.spell("Kissa"))
+		self.assertTrue(self.voikko.spell("Kissa"))
 	
 	def testUpperCaseScandinavianLetters(self):
-		self.failUnless(self.voikko.spell(u"Äiti"))
-		self.failIf(self.voikko.spell(u"Ääiti"))
-		self.failUnless(self.voikko.spell(u"š"))
-		self.failUnless(self.voikko.spell(u"Š"))
+		self.assertTrue(self.voikko.spell(u"Äiti"))
+		self.assertFalse(self.voikko.spell(u"Ääiti"))
+		self.assertTrue(self.voikko.spell(u"š"))
+		self.assertTrue(self.voikko.spell(u"Š"))
 
 	def testAcceptAllUppercase(self):
 		self.voikko.setIgnoreUppercase(False)
 		self.voikko.setAcceptAllUppercase(False)
-		self.failIf(self.voikko.spell("KISSA"))
+		self.assertFalse(self.voikko.spell("KISSA"))
 		self.voikko.setAcceptAllUppercase(True)
-		self.failUnless(self.voikko.spell("KISSA"))
-		self.failIf(self.voikko.spell("KAAAA"))
+		self.assertTrue(self.voikko.spell("KISSA"))
+		self.assertFalse(self.voikko.spell("KAAAA"))
 	
 	def testIgnoreNonwords(self):
 		self.voikko.setIgnoreNonwords(False)
-		self.failIf(self.voikko.spell("hatapitk@iki.fi"))
+		self.assertFalse(self.voikko.spell("hatapitk@iki.fi"))
 		self.voikko.setIgnoreNonwords(True)
-		self.failUnless(self.voikko.spell("hatapitk@iki.fi"))
-		self.failIf(self.voikko.spell("ashdaksd"))
+		self.assertTrue(self.voikko.spell("hatapitk@iki.fi"))
+		self.assertFalse(self.voikko.spell("ashdaksd"))
 	
 	def testAcceptExtraHyphens(self):
 		self.voikko.setAcceptExtraHyphens(False)
-		self.failIf(self.voikko.spell("kerros-talo"))
+		self.assertFalse(self.voikko.spell("kerros-talo"))
 		self.voikko.setAcceptExtraHyphens(True)
-		self.failUnless(self.voikko.spell("kerros-talo"))
+		self.assertTrue(self.voikko.spell("kerros-talo"))
 	
 	def testAcceptMissingHyphens(self):
 		self.voikko.setAcceptMissingHyphens(False)
-		self.failIf(self.voikko.spell("sosiaali"))
+		self.assertFalse(self.voikko.spell("sosiaali"))
 		self.voikko.setAcceptMissingHyphens(True)
-		self.failUnless(self.voikko.spell("sosiaali"))
+		self.assertTrue(self.voikko.spell("sosiaali"))
 	
 	def testSetAcceptTitlesInGc(self):
 		self.voikko.setAcceptTitlesInGc(False)
@@ -267,14 +267,14 @@ class LibvoikkoOldTest(unittest.TestCase):
 	
 	def testSetSuggestionStrategy(self):
 		self.voikko.setSuggestionStrategy(libvoikkoOld.SuggestionStrategy.OCR)
-		self.failIf(u"koira" in self.voikko.suggest(u"koari"))
-		self.failUnless(u"koira" in self.voikko.suggest(u"koir_"))
+		self.assertFalse(u"koira" in self.voikko.suggest(u"koari"))
+		self.assertTrue(u"koira" in self.voikko.suggest(u"koir_"))
 		self.voikko.setSuggestionStrategy(libvoikkoOld.SuggestionStrategy.TYPO)
-		self.failUnless(u"koira" in self.voikko.suggest(u"koari"))
+		self.assertTrue(u"koira" in self.voikko.suggest(u"koari"))
 	
 	def testMaxAnalysisCountIsNotPassed(self):
 		complexWord = u"lumenerolumenerolumenerolumenerolumenero"
-		self.failUnless(len(self.voikko.analyze(complexWord)) <= libvoikkoOld.MAX_ANALYSIS_COUNT)
+		self.assertTrue(len(self.voikko.analyze(complexWord)) <= libvoikkoOld.MAX_ANALYSIS_COUNT)
 	
 	def testMorPruningWorks(self):
 		# TODO: this test will not fail, it just takes very long time
@@ -282,7 +282,7 @@ class LibvoikkoOldTest(unittest.TestCase):
 		complexWord = u""
 		for i in range(0, 20):
 			complexWord = complexWord + u"lumenero"
-		self.failUnless(len(complexWord) < libvoikkoOld.MAX_WORD_CHARS)
+		self.assertTrue(len(complexWord) < libvoikkoOld.MAX_WORD_CHARS)
 		self.voikko.analyze(complexWord)
 	
 	
@@ -291,23 +291,23 @@ class LibvoikkoOldTest(unittest.TestCase):
 		longWord = u""
 		for i in range(0, 25):
 			longWord = longWord + u"kuraattori"
-		self.failUnless(len(longWord) < libvoikkoOld.MAX_WORD_CHARS)
-		self.failUnless(self.voikko.spell(longWord))
+		self.assertTrue(len(longWord) < libvoikkoOld.MAX_WORD_CHARS)
+		self.assertTrue(self.voikko.spell(longWord))
 		
 		longWord = longWord + u"kuraattori"
-		self.failUnless(len(longWord) > libvoikkoOld.MAX_WORD_CHARS)
-		self.failIf(self.voikko.spell(longWord))
+		self.assertTrue(len(longWord) > libvoikkoOld.MAX_WORD_CHARS)
+		self.assertFalse(self.voikko.spell(longWord))
 	
 	def testOverLongWordsAreNotAnalyzed(self):
 		# Limit is 255 characters. This behavior is deprecated and may change.
 		longWord = u""
 		for i in range(0, 25):
 			longWord = longWord + u"kuraattori"
-		self.failUnless(len(longWord) < libvoikkoOld.MAX_WORD_CHARS)
+		self.assertTrue(len(longWord) < libvoikkoOld.MAX_WORD_CHARS)
 		self.assertEqual(1, len(self.voikko.analyze(longWord)))
 		
 		longWord = longWord + u"kuraattori"
-		self.failUnless(len(longWord) > libvoikkoOld.MAX_WORD_CHARS)
+		self.assertTrue(len(longWord) > libvoikkoOld.MAX_WORD_CHARS)
 		self.assertEqual(0, len(self.voikko.analyze(longWord)))
 
 if __name__ == "__main__":

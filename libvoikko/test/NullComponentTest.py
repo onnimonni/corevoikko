@@ -47,7 +47,7 @@ class NullComponentTest(unittest.TestCase):
 		self.assertEqual(0, len(suggestionList))
 
 	def testAllOkSpellerWorks(self):
-		self.failUnless(self.voikko.spell(u"koirra"))
+		self.assertTrue(self.voikko.spell(u"koirra"))
 
 
 if __name__ == "__main__":

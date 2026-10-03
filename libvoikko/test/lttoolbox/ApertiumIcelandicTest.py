@@ -47,7 +47,7 @@ class ApertiumIcelandicTest(unittest.TestCase):
 	def testMultipleAnalysesCanBeReturned(self):
 		# ^Björn/Björn<np><ant><m><sg><nom>/Björn<np><ant><m><sg><acc>/Björn<n><m><sg><nom><ind>/Björn<n><m><sg><acc><ind>$
 		analysisList = self.voikko.analyze(u"Björn")
-		self.failUnless(len(analysisList) > 1)
+		self.assertTrue(len(analysisList) > 1)
 	
 	def testProperNounIsProperlyAnalyzed(self):
 		# ^Danmörk/Danmörk<np><top><f><sg><nom><ind>$
@@ -62,10 +62,10 @@ class ApertiumIcelandicTest(unittest.TestCase):
 		self.assertEqual(1, len(analysisList))
 	
 	def testIgnoreDotWorks(self):
-		self.failUnless(self.voikko.spell(u"lengstur"))
-		self.failIf(self.voikko.spell(u"lengstur."))
+		self.assertTrue(self.voikko.spell(u"lengstur"))
+		self.assertFalse(self.voikko.spell(u"lengstur."))
 		self.voikko.setIgnoreDot(True)
-		self.failUnless(self.voikko.spell(u"lengstur."))
+		self.assertTrue(self.voikko.spell(u"lengstur."))
 
 
 if __name__ == "__main__":

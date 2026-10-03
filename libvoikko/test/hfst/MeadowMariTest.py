@@ -29,16 +29,16 @@ class MeadowMariTest(unittest.TestCase):
 		self.voikko.terminate()
 	
 	def testUnknowWordIsRejected(self):
-		self.failIf(self.voikko.spell(u"skjdfhksdfgh"))
+		self.assertFalse(self.voikko.spell(u"skjdfhksdfgh"))
 	
 	def testValidWordIsAccepted(self):
-		self.failUnless(self.voikko.spell(u"йылме"))
+		self.assertTrue(self.voikko.spell(u"йылме"))
 	
 	def testProperNounIsAccepted(self):
-		self.failUnless(self.voikko.spell(u"Марий"))
+		self.assertTrue(self.voikko.spell(u"Марий"))
 	
 	def testSuggestionsAreReturned(self):
-		self.failUnless(u"Такси" in self.voikko.suggest(u"Такаси"))
+		self.assertTrue(u"Такси" in self.voikko.suggest(u"Такаси"))
 
 
 if __name__ == "__main__":

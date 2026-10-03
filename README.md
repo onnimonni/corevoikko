@@ -119,8 +119,15 @@ Current frozen-corpus result: **0 false positives**, **0 missed supported
 errors**, **27 detections**, **21/21 corrections**, **8 unsupported checks**.
 Passing this curated workload does not establish correctness on arbitrary text.
 
-Native adapter regressions, after the benchmark build:
-`devenv --offline shell -- uv run --offline --no-project python -m unittest -v benchmarks.test_check_finnish`
+Native regressions, after the benchmark build (adapter behavior plus upstream
+`tests/voikkotest/fi-x-vfst` grammar 181, tokenizer 33 and sentence 19 cases):
+`devenv --offline shell -- uv run --offline --no-project python -m unittest -v benchmarks.test_check_finnish benchmarks.test_upstream_suites`
+
+`libvoikko/test` used `failIf`/`failUnless`/`assertEquals`, removed in Python
+3.12, so most of the suite errored before reaching Voikko (`bug:test-suite`,
+fixed). With this hermetic build, 59/65 `LibvoikkoTest` cases pass; the other 6
+need default dictionary discovery or the medicine variant, which
+`--disable-external-dicts` and the standard-only build intentionally omit.
 
 
 ### Reviewed public sources
