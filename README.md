@@ -276,11 +276,15 @@ legitimate plain-text policies (`limitation:false-negative`):
     keystroke from a known word (a repeated typo such as `Sinlla` stays
     reported).
   - Name + hyphen + Finnish word (`Kanta-palvelujen`, `Paytrail-tietosuojaseloste`)
-    passes when the Finnish part is valid and the name is not one keystroke
-    from a known word (`Poito-oikeus` stays reported). A typo after the hyphen
-    is still reported even for a learned name (`Abitreeni-palveussa`).
-  - After a capitalized name mid-sentence, Kotus's space-before-hyphen rule is
-    reported as code 1: `Google Analytics-palvelua` → `Analytics -palvelua`.
+    passes when the Finnish part is valid, the joined form is not an
+    established compound (`Henkilö-tiedot`, `Tieto-suoja` stay reported) and
+    the name is not one keystroke from a known word (`Poito-oikeus` stays
+    reported). A typo after the hyphen is still reported even for a learned
+    name (`Abitreeni-palveussa`).
+  - After a nominative proper noun or unknown capitalized word mid-sentence,
+    Kotus's space-before-hyphen rule is reported as code 1:
+    `Google Analytics-palvelua` → `Analytics -palvelua`; not after a genitive
+    (`Kelan Kela-kortissa`).
   - Schemeless web addresses with a path (`www.tietosuoja.fi/fi/index/…`)
     are not spell-checked; a suspended compound part (`Digi- ja …`) gets no
     "write in lowercase"; `Verohallinto` added as a proper noun.
@@ -289,6 +293,37 @@ legitimate plain-text policies (`limitation:false-negative`):
   (names or titles seen once, English glosses, flattened bold headings).
   Typo injection on the same documents: 570/574 caught; the 4 misses are typos
   inside unknown names (`Stoia`, `Abitrenit`) or inside a URL.
+- VOIKKO-029 (`integration:name-filter`, proof of concept, opt-in): a Bloom
+  filter of company, product and service names (`benchmarks/name_filter.py`,
+  built by `benchmarks/build_name_filter.py`, loaded with
+  `check_finnish.py --names names.bloom`).
+  - A filter built from the PRH register reports `<Name> Oy|Oyj|Ab|Abp|Ky|Kb|Ay|Osk`
+    mentions whose name is not a current registered name:
+    `CONCOCONNENTE Oy` → "Yritystä ei löydy kaupparekisteristä". A Bloom filter
+    has no false negatives, so such a finding means the name is absent from the
+    data; a false positive only hides a finding. Associations (`ry`, separate
+    Register of Associations) and `Tmi` are never reported.
+  - Any filter excuses known names as spelling errors, also inflected
+    (`Storian`, `Paytrailin`, `Kanta-`); a word that only occurs inside a
+    multiword name is excused only if it is not one keystroke from a Finnish
+    word.
+  - Keys are NFC-casefolded; company forms are canonicalized (`Ab`→`oy`).
+    Size: 3.0 MB per million keys at 1e-5 target false-positive rate (17
+    hashes), 1.8 MB at 1e-3. The file header records sources, record counts,
+    SHA-256 of inputs and build date.
+  - Only hand-written samples are committed (`benchmarks/data/prh_sample.json`
+    in PRH's schema, `benchmarks/data/name_seed.tsv`); nothing is downloaded.
+  - Sources (fetch commands in `build_name_filter.py`):
+
+    | Source | Content | Licence |
+    |---|---|---|
+    | PRH YTJ open data v3 `all_companies` (https://avoindata.prh.fi/opendata-ytj-api/v3/all_companies, schema https://avoindata.prh.fi/opendata-ytj-api/v3/schema) | Trade Register companies; current names (`version` 1, no `endDate`) of all name types: company, parallel, auxiliary and its translation | CC BY 4.0, attribute Patentti- ja rekisterihallitus |
+    | Wikidata SPARQL (`benchmarks/data/name_sources_wikidata.rq`) | fi/sv/en labels and aliases of software, web/online services, web and mobile apps, software and technology companies | CC0 1.0 |
+    | botocore `data/*/*/service-2.json` (https://github.com/boto/botocore) | AWS `serviceFullName`/`serviceAbbreviation` (`Amazon Simple Storage Service`, `Amazon S3`) | Apache-2.0 |
+    | `benchmarks/data/name_seed.tsv` | names seen in the reviewed policies, with source URL per row | facts from cited pages |
+
+  Limit: PoC data is a handful of names; a typo of a real company that is
+  itself a registered company (`Stora Oy`) cannot be detected.
 - VOIKKO-025's new `Poikkeavat_p` is verified compatible with the Sukija
   variant: its generator appends `Sukija_p` to `Sanasto_p` and keeps
   `Poikkeavat_p`; `vvfst-sukija` builds.
@@ -305,7 +340,7 @@ Passing this curated workload does not establish correctness on arbitrary text.
 Native regressions, after the benchmark build (adapter behavior plus upstream
 `tests/voikkotest/fi-x-vfst` grammar 181, tokenizer 33, sentence 19, spelling
 3,700+ and suggestion 68 cases):
-`devenv --offline shell -- uv run --offline --no-project python -m unittest -v benchmarks.test_check_finnish benchmarks.test_upstream_suites`
+`devenv --offline shell -- uv run --offline --no-project python -m unittest -v benchmarks.test_check_finnish benchmarks.test_upstream_suites benchmarks.test_name_filter`
 
 `libvoikko/test` used `failIf`/`failUnless`/`assertEquals`, removed in Python
 3.12, so most of the suite errored before reaching Voikko (`bug:test-suite`,

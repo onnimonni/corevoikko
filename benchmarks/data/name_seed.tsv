@@ -1,0 +1,14 @@
+# Proof-of-concept seed: names exactly as written in the real documents reviewed
+# for this project. Columns: name, kind, source where the name was observed.
+# Replace/extend with the PRH, Wikidata and botocore sources (see build_name_filter.py).
+Kela	public-agency	https://www.kela.fi/tietosuoja
+Kanta	public-service	https://www.kela.fi/tietosuoja
+Eepos	programme	https://www.kela.fi/tietosuoja
+Suomi.fi	public-service	https://www.kela.fi/tietosuoja
+Yleisradio Oy	company	https://yle.fi/a/20-10006120
+Abitreenit	product	https://yle.fi/a/20-10006120
+Kustannusosakeyhtiö Otava	company	https://otava.kauppakv.fi/sivu/tietosuojaseloste
+Storia Oy	company	https://otava.kauppakv.fi/sivu/tietosuojaseloste
+Paytrail	product	https://otava.kauppakv.fi/sivu/tietosuojaseloste
+Sava-Group Oy	company	https://savagroup.fi/tietosuojaseloste
+Google Analytics	product	https://savagroup.fi/tietosuojaseloste

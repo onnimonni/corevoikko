@@ -1,0 +1,19 @@
+# Labels and aliases (fi, sv, en) of software, web/online services, apps and
+# software/technology companies on Wikidata (CC0). Run at https://query.wikidata.org/
+# and export as TSV; see build_name_filter.py. Direct instances only (wdt:P31):
+# a transitive subclass path (P31/P279*) over "software" times out on the
+# public endpoint. If a class still times out, run the query once per class.
+SELECT DISTINCT ?label WHERE {
+  VALUES ?class {
+    wd:Q7397      # software
+    wd:Q193424    # web service
+    wd:Q19967801  # online service
+    wd:Q189210    # web application
+    wd:Q620615    # mobile app
+    wd:Q1058914   # software company
+    wd:Q18388277  # technology company
+  }
+  ?item wdt:P31 ?class .
+  { ?item rdfs:label ?label } UNION { ?item skos:altLabel ?label }
+  FILTER(LANG(?label) IN ("fi", "sv", "en"))
+}

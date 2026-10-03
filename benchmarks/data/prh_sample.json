@@ -1,0 +1,12 @@
+{
+  "_note": "Hand-written sample in the PRH YTJ v3 Company schema (https://avoindata.prh.fi/opendata-ytj-api/v3/schema). Not downloaded data: only companies named in the reviewed documents, names copied from those documents. Used to test the PRH adapter and the unknown-company check.",
+  "companies": [
+    {"businessId": {"value": "1564596-0"},
+     "names": [{"name": "Kustannusosakeyhtiö Otava", "type": "1", "version": 1}]},
+    {"names": [{"name": "Storia Oy", "type": "1", "version": 1}]},
+    {"names": [{"name": "Yleisradio Oy", "type": "1", "version": 1}]},
+    {"names": [{"name": "Paytrail Oyj", "type": "1", "version": 1}]},
+    {"names": [{"name": "Sava-Group Oy", "type": "1", "version": 1},
+               {"name": "Sava Group Oy", "type": "1", "version": 2, "endDate": "2020-01-01"}]}
+  ]
+}

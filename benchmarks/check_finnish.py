@@ -9,7 +9,9 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "libvoikko/python"))
+sys.path.insert(0, str(ROOT / "benchmarks"))
 from libvoikko import Token, Voikko  # noqa: E402
+from name_filter import TRADE_REGISTER_FORMS, NameFilter  # noqa: E402
 
 # Schemeless domain, optionally with a hyphen-attached Finnish ending:
 # kela.fi, Suomi.fi-tunnisteella. Restricted to common TLDs so a missing space
@@ -25,7 +27,10 @@ URL_PATH = re.compile(r"(?i)(?<![\w@.])(?:[a-z0-9][a-z0-9-]*\.)+(?:fi|ax|eu|se|e
 # Unknown capitalized name + hyphen + Finnish word: Kanta-palvelujen, Paytrail-tietosuojaseloste.
 NAME_COMPOUND = re.compile(r"^[A-ZÅÄÖ][\w]*-(?P<suffix>[a-zåäö]\w*)$")
 # A capitalized word mid-sentence directly before the compound: "käyttää Google Analytics-palvelua".
-MULTIWORD_NAME_BEFORE = re.compile(r"(?<=[\w,] )[A-ZÅÄÖ]\w* $")
+MULTIWORD_NAME_BEFORE = re.compile(r"(?<=[\w,] )(?P<prev>[A-ZÅÄÖ]\w*) $")
+# Capitalized words followed by a company form: "Storia Oy", "CONCOCONNENTE Oy:lle".
+_FORMS = "|".join(sorted(TRADE_REGISTER_FORMS, key=len, reverse=True))
+COMPANY_MENTION = re.compile(r"(?P<name>(?:[A-ZÅÄÖ0-9][\w&'’.-]*[ ]){1,6})(?P<form>(?i:" + _FORMS + r"))(?::\w+)?(?![\w])")
 
 
 def _domain_valid(checker, word):
@@ -66,15 +71,28 @@ def _is_linking_form(checker, surface, first_base):
                for a in checker.analyze(surface))
 
 
+def _established_index():
+    global _established
+    if _established is None:
+        _established = json.loads(gzip.decompress(COMPOUND_INDEX.read_bytes()))["compounds"]
+    return _established
+
+
+def _is_established_compound(checker, word):
+    """word (lowercase) is a listed compound with exactly this linking form:
+    henkilötiedot, tietosuoja; not kantapalvelut."""
+    index = _established_index()
+    return any(reading and reading[2] in index.get(f"{reading[0]}|{reading[1]}", ())
+               for reading in compound_readings(checker, word))
+
+
 def established_compound_suggestions(checker, word):
     """Suggest the established linking form when every reading of a compound
     uses a nominative/genitive first part that no established compound with the
     same parts uses: asiakkaansuhteen -> asiakassuhteen, rekisteripitäjän ->
     rekisterinpitäjän. Compounds absent from the index are never flagged.
     Known risk: both linkings valid but only one listed (miehenkuva/mieskuva)."""
-    global _established
-    if _established is None:
-        _established = json.loads(gzip.decompress(COMPOUND_INDEX.read_bytes()))["compounds"]
+    _established = _established_index()
     readings = compound_readings(checker, word)
     if not readings or None in readings or "'" in word or "’" in word:
         return []
@@ -126,14 +144,65 @@ def _capitalized_name(word):
     return name if name[:1].isupper() and not name.isupper() and name.isalpha() else None
 
 
+def _typo_like(checker, word):
+    """A spelling suggestion one keystroke away: Sinlla -> Sinulla, Poito -> Poisto."""
+    return any(_one_edit_apart(word, s) for s in checker.suggest(word))
+
+
+def _known_name(checker, word):
+    """The optional name filter knows the word as a name, or as a word of a
+    multiword name and the word isn't a likely typo of a Finnish word."""
+    names = getattr(checker, "_names", None)
+    return bool(names) and (names.knows_name(word)
+                            or (names.knows_name_word(word) and not _typo_like(checker, word)))
+
+
 def _name_compound_valid(checker, word):
-    """The name part cannot be checked; the Finnish part after the hyphen is.
-    A name part one keystroke from a known word (Poito- -> Poisto-) is a typo."""
+    """Name + hyphen + Finnish word: Kanta-palvelujen, Paytrail-tietosuojaseloste.
+    The Finnish part must spell, and the joined form must not be an established
+    compound (Henkilö-tiedot, Tieto-suoja are split common words). The name part
+    must spell, be a known name, or be unknown and not one keystroke from a
+    known word (Poito-oikeus is a typo of Poisto-)."""
     match = NAME_COMPOUND.match(word)
     if not (match and checker.spell(match.group("suffix"))):
         return False
     name = word.split("-")[0]
-    return checker.spell(name) or not any(_one_edit_apart(name, s) for s in checker.suggest(name))
+    if _is_established_compound(checker, (name + match.group("suffix")).lower()):
+        return False
+    return checker.spell(name) or _known_name(checker, name) or not _typo_like(checker, name)
+
+
+def _multiword_name(checker, prev, word):
+    """prev + word is a multiword name: prev is a nominative proper noun (Google,
+    Microsoft; not genitive Kelan) or the filter knows "prev name"."""
+    names = getattr(checker, "_names", None)
+    if names and names.knows_full_name(f"{prev} {word.split('-')[0]}"):
+        return True
+    return not checker.spell(prev) or any(a.get("CLASS") in ("nimi", "etunimi", "sukunimi", "paikannimi")
+                                          and a.get("SIJAMUOTO") == "nimento" for a in checker.analyze(prev))
+
+
+def _company_diagnostics(checker, text):
+    """With a filter built from the PRH register: report "<Name> Oy" mentions
+    whose name is not a registered company name. A Bloom filter has no false
+    negatives, so an unknown name is certainly absent from the filter's data."""
+    names = getattr(checker, "_names", None)
+    if not (names and names.covers_finnish_companies):
+        return []
+    result = []
+    for match in COMPANY_MENTION.finditer(text):
+        words = match.group("name").split()
+        if any(names.knows_company(" ".join(words[i:]), match.group("form")) for i in range(len(words))):
+            continue
+        start = match.start("name")
+        # A sentence-initial common word is not part of the name: "Asiakkaana CONCO Oy".
+        if len(words) > 1 and re.search(r"(^|[.!?:]\s+)$", text[:start]) and checker.spell(words[0].lower()):
+            start = text.index(words[1], start)
+        end = match.end("form")
+        result.append({"kind": "name", "code": None, "start": start, "end": end, "text": text[start:end],
+                       "description": "Yritystä ei löydy kaupparekisteristä (PRH): tarkista nimi.",
+                       "suggestions": []})
+    return result
 
 
 def _one_edit_apart(a, b):
@@ -193,7 +262,9 @@ def apply_document_names(checker, document):
 
     def keep(d):
         if d["kind"] == "grammar" and d.get("code") == 6:
-            return not (d["text"].endswith("-") or _base_forms(checker, d["text"], cache) & candidates)
+            names = getattr(checker, "_names", None)
+            return not (d["text"].endswith("-") or _base_forms(checker, d["text"], cache) & candidates
+                        or (names and names.knows_name(d["text"])))
         # Learned names only excuse the name itself: not compound-linking
         # findings, and not a typo in a Finnish part after a hyphen
         # (Abitreeni-palveussa); a capitalized part continues the name (Sava-Group).
@@ -245,7 +316,8 @@ def diagnostics(checker, text, document_names=True):
         # identifiers, not words that can be misspelled.
         if token.tokenType == Token.WORD and any(c.isalpha() for c in word) and not in_url:
             valid = (checker.spell(word) or _domain_valid(checker, word)
-                     or _name_compound_valid(checker, word))
+                     or _name_compound_valid(checker, word)
+                     or (any(c.isupper() for c in word) and _known_name(checker, word)))
             if not valid and text[offset + len(word):offset + len(word) + 1] == ".":
                 # The default tokenizer leaves abbreviation/date dots separate.
                 valid = checker.spell(word + ".")
@@ -255,7 +327,9 @@ def diagnostics(checker, text, document_names=True):
             elif "-" not in word and (fixes := established_compound_suggestions(checker, word)):
                 result.append({"kind": "spelling", "start": offset, "end": offset + len(word),
                                "text": word, "suggestions": fixes})
-            elif NAME_COMPOUND.match(word) and MULTIWORD_NAME_BEFORE.search(text[:offset]):
+            elif (NAME_COMPOUND.match(word) and not checker.spell(word)
+                  and (before := MULTIWORD_NAME_BEFORE.search(text[:offset]))
+                  and _multiword_name(checker, before.group("prev"), word)):
                 # Kotus: a multiword name takes a space before the hyphen
                 # (Google Analytics -palvelu), not Google Analytics-palvelu.
                 result.append({"kind": "grammar", "code": 1, "start": offset, "end": offset + len(word),
@@ -264,6 +338,10 @@ def diagnostics(checker, text, document_names=True):
         offset += len(word)
     if offset != len(text):
         raise RuntimeError("Tokenizer did not consume the input")
+    companies = _company_diagnostics(checker, text)
+    # A register finding covers the whole name; drop spelling warnings inside it.
+    result = [d for d in result if not (d["kind"] == "spelling" and any(
+        c["start"] <= d["start"] and d["end"] <= c["end"] for c in companies))] + companies
     grammar_text = text
     boundaries = None
     if getattr(checker, "_finnish_text_profile", None) == "message":
@@ -409,6 +487,8 @@ def main():
     parser.add_argument("--report", type=Path, default=ROOT / ".bench-build/findings.json")
     parser.add_argument("--text-file", type=Path, help="Check a local UTF-8 plain-text document instead of benchmarking")
     parser.add_argument("--profile", choices=["prose", "title", "list", "message"], default="prose")
+    parser.add_argument("--names", type=Path,
+                        help="Name Bloom filter from build_name_filter.py (company/product names)")
     args = parser.parse_args()
     # Do not silently load a system libvoikko if the benchmark library is missing.
     library_name = "libvoikko.1.dylib" if sys.platform == "darwin" else "libvoikko.so.1"
@@ -419,6 +499,8 @@ def main():
     try:
         if args.text_file:
             configure(checker, args.profile)
+            if args.names:
+                checker._names = NameFilter.load(args.names)
             print(json.dumps(diagnostics(checker, args.text_file.read_bytes().decode("utf-8")), ensure_ascii=False, indent=2))
         else:
             benchmark(checker, args.corpus, args.report, args.dictionary)
