@@ -245,6 +245,14 @@ class LibvoikkoTest(unittest.TestCase):
         self.assertTrue(all(self.voikko.spell(t.tokenText) for t in tokens if t.tokenType == Token.WORD))
         self.assertFalse(self.voikko.spell(unicodedata.normalize("NFD", u"säilytettään")))
 
+    def testCompanyNamesKeepCapitalization(self):
+        for name in (u"Posti Oy", u"Nokia Oyj", u"Esimerkki Palvelut Oy", u"Oy Esimerkki Ab"):
+            text = u"Rekisterinpitäjänä toimii " + name + u"."
+            self.assertEqual([], self.voikko.grammarErrors(text, "fi"), text)
+        # A capitalized common noun outside a company name is still reported.
+        errors = self.voikko.grammarErrors(u"Rekisterinpitäjänä toimii Esimerkki ja Oy.", "fi")
+        self.assertEqual([(6, 26, 9)], [(e.errorCode, e.startPos, e.errorLen) for e in errors])
+
     def testAnalyze(self):
         analysisList = self.voikko.analyze(u"kansaneläkehakemus")
         self.assertEqual(1, len(analysisList))
