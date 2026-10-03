@@ -244,8 +244,9 @@ legitimate plain-text policies (`limitation:false-negative`):
 - VOIKKO-026 (`coverage:dictionary`): `PDF ~ pdf` (both endorsed in
   Kielitoimiston ohjepankki's lyhenneluettelo) added with front-vowel endings:
   `PDF:nä`, `pdf-tiedosto`, `PDF-tiedostona` pass; `PDF:na` is rejected.
-  Verified compatible with the Sukija variant: its generator appends
-  `Sukija_p` to `Sanasto_p`, keeping `Poikkeavat_p`; `vvfst-sukija` builds.
+- VOIKKO-025's new `Poikkeavat_p` is verified compatible with the Sukija
+  variant: its generator appends `Sukija_p` to `Sanasto_p` and keeps
+  `Poikkeavat_p`; `vvfst-sukija` builds.
 - Build finding (`bug:build`, upstream, not fixed): `make vvfst-sukija` fails
   with a non-default `VVFST_BUILDDIR` ("No rule to make target
   …/generate_sukija.py"), because the rules expect `generate_sukija.py` and
