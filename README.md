@@ -121,8 +121,9 @@ legitimate plain-text policies (`limitation:false-negative`):
   inflected forms such as `Fimean` and `Nordean` stop being spelling errors.
   Cost: capitalized homographs lose the code 6 hint (`Ostin uuden Koneen.`
   is no longer flagged, since *Kone* is also a company). Default left
-  unchanged; choose per use case. `Verohallinto` and `Tilastokeskus` are
-  accepted as compounds but get code 6 when capitalized; `Traficom` is absent.
+  unchanged; choose per use case. `Tilastokeskus` is accepted as a compound
+  but gets code 6 when capitalized (`Verohallinto`: fixed in VOIKKO-028);
+  `Traficom` is absent.
 - (`Digi-` in `Digi- ja väestötietovirasto` was fixed in VOIKKO-028.)
 - Second real document (Yle Abitreenit privacy notice, 45 blocks): 9
   diagnostics after VOIKKO-020; recall 39/40 injected typos (the one miss is
