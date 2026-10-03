@@ -90,6 +90,16 @@ legitimate plain-text policies (`limitation:false-negative`):
   Colons before lists and commas/semicolons on list lines are legitimate.
 - An unclosed opening parenthesis is not reported; only a stray closing one
   (code 12) is. List markers such as `a)` make naive pairing unreliable.
+- Missing-verb hint (code 17) fires on verbless formulaic greetings/closings
+  ending in a period, e.g. `Hyvää huomenta.`, `Terveisin Elias.`, in both
+  profiles (`limitation:message-format`). Disabling it would also lose real
+  hits such as `Minä juoksema nopeasti.`
+- Valid-looking compounds can hide typos: `Ystävälisin` parses as *ystävä* +
+  *lisin* (`limitation:compound-overgeneration`). Individual frequent cases go
+  to the autocorrect list (see VOIKKO-016).
+- Suggestion ranking: `tietosuja` never suggests `tietosuoja`; inserting `o`
+  is a late, low-priority generator, and the split `tiet osuja` ranks first
+  (`limitation:suggestion-ranking`).
 
 ### Retained fixes
 
@@ -140,6 +150,9 @@ legitimate plain-text policies (`limitation:false-negative`):
   `GDPR:aa` and `GDRP` stay rejected). The adapter no longer spell-checks
   letterless tokens such as Y-tunnus `1234567-8`, `040-1234567` and ISO dates;
   tokens with letters, e.g. `kissa2`, are still checked.
+- VOIKKO-016 (`coverage:autocorrect`): `ystävälisin` → `ystävällisin` added to
+  `vocabulary/autocorrect/fi.xml`. Grammar now reports the misspelled email
+  sign-off as code 1 with a case-preserving suggestion.
 
 Current frozen-corpus result: **0 false positives**, **0 missed supported
 errors**, **27 detections**, **21/21 corrections**, **8 unsupported checks**.
