@@ -94,6 +94,8 @@ spelling/grammar result establishes privacy-law compliance or factual accuracy.
   CR to grammar rules; diagnostic spans still refer to the original input.
 - VOIKKO-003: URL tokens leave terminal `.`, `!` and `?` as sentence punctuation,
   while query separators and parameters inside URLs remain intact.
+- VOIKKO-007: the standard dictionary now includes the sourced verb
+  `pseudonymisoida`, with regular inflection and derived `pseudonymisointi`.
 
 
 ### Reviewed public sources

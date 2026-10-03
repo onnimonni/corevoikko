@@ -2418,6 +2418,8 @@ LEXICON Poikkeavat_t
 [Lt][Xp]nähdä[X]nähte[Tn2]:nähte	Omistusliite_ä	;
 [Lt][Xp]olla[X]o:o       Olla ;
 [Lt][Xp]potea[X]po:po       Potea ;
+! Privacy terminology: https://tietosuoja.fi/pseudonymisointi-anonymisointi
+[Lt][Xp]pseudonymisoida[X]pseudonymiso:pseudonymiso Kanavoida_a ;
 [Lt][Xp]saada[X]saas:saas	Loppu	;
 [Lt][Xp]seistä[X]seis:seis	Seistä	;
 [Lt][Xp]tietää[X]tiete[Tn2]:tiete	Omistusliite_ä	;
