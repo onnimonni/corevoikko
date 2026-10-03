@@ -112,10 +112,16 @@ legitimate plain-text policies (`limitation:false-negative`):
   (`Kirjaamo` vs `kirjaamoon`), and dictionary gaps — the prefix *toisio-*
   (`toisiolaki`, `toisiokäyttö`), standalone `PDF`/`pdf`, `PL` (postilokero),
   programme names `Eepos`, `Kanta`.
-- Authority names (`coverage:dictionary-config`): vocabulary entries flagged
-  `orgname` (e.g. `Fimea`, `Valvira`) are excluded from the default standard
-  build; building with `GENLEX_OPTS=--extra-usage=orgname` includes them.
-  Others (`Verohallinto`, `Traficom`, `Tilastokeskus`) are absent altogether.
+- Organisation names (`coverage:dictionary-config`): 113 vocabulary entries
+  flagged `orgname` (Fimea, Valvira, Nordea, Tekes, Siemens, Kone, …) are
+  excluded from the default build. Building with
+  `make vvfst GENLEX_OPTS=--extra-usage=orgname` was measured on a separate
+  dictionary: the benchmark stays at loss 0 and all upstream suites pass;
+  inflected forms such as `Fimean` and `Nordean` stop being spelling errors.
+  Cost: capitalized homographs lose the code 6 hint (`Ostin uuden Koneen.`
+  is no longer flagged, since *Kone* is also a company). Default left
+  unchanged; choose per use case. `Verohallinto` and `Tilastokeskus` are
+  accepted as compounds but get code 6 when capitalized; `Traficom` is absent.
 - `Digi- ja väestötietovirasto` gets code 6 on `Digi-`: a capitalized
   suspended compound part starting a name is indistinguishable from a slip.
 - Second real document (Yle Abitreenit privacy notice, 45 blocks): 9
