@@ -2169,6 +2169,10 @@ LEXICON Summayhdyssanat
 [Ln][Xp]jääkaappi-pakastin[X]jääkaappi-[Bm]pakasti:jääkaappi-pakasti	NimisanaUistin_a	;
 [Ln][Xp]laulaja-kitaristi[X]laulaja-[Bm]kitarist:laulaja-kitarist	NimisanaRisti_a	;
 
+LEXICON Poikkeavat_p
+! toisio- (secondary): counterpart of ensiö-, same compounding; toisiokäyttö, toisiolaki.
+[Lp]toisio:toisio	EtuliitteenJatko_elleln;
+
 LEXICON Poikkeavat_em
 ! Kela: Kansaneläkelaitos (Finland's social insurance institution); not only the common noun "kela" (reel).
 [Lem][Xp]Kela[X]kel:kel	NimiKala_a	;

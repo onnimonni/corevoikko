@@ -109,6 +109,11 @@ class TextCheckerTest(unittest.TestCase):
         self.assertEqual([True, True, True, True, False],
                          [self.checker.spell(w) for w in ("IP", "IP:tä", "IP-osoite", "IP-osoitteen", "IP:ta")])
 
+    def testToisioPrefixCompounds(self):
+        self.assertEqual([True, True, True, True, False, False],
+                         [self.checker.spell(w) for w in ("toisiokäyttö", "toisiolaki", "toisiolain",
+                                                          "toisiokäyttöä", "toisio", "toisiokäytö")])
+
 
 if __name__ == "__main__":
     unittest.main()
