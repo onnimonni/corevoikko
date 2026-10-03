@@ -2179,6 +2179,8 @@ LEXICON Poikkeavat_p
 LEXICON Poikkeavat_em
 ! Kela: Kansaneläkelaitos (Finland's social insurance institution); not only the common noun "kela" (reel).
 [Lem][Xp]Kela[X]kel:kel	NimiKala_a	;
+! Verohallinto: official name of the Finnish Tax Administration (Kielitoimiston ohjepankki, Valtionhallinnon nimet).
+[Lem][Xp]Vero=hallinto[X]vero[Bm]hallin:verohallin	NimiAnto_a	;
 [Lem][Xp]Xinhua[X]xinhu:xinhu	NimiPeruna_a	;
 
 LEXICON Poikkeavat_ep

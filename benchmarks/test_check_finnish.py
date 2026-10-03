@@ -133,6 +133,24 @@ class TextCheckerTest(unittest.TestCase):
                      "Kansanedustaja vastasi."):
             self.assertEqual([], diagnostics(self.checker, text), text)
 
+    def testNamesUrlsAndAgencyNames(self):
+        configure(self.checker, "prose")
+        clean = ("Tiedot ovat Storian palvelimella. Storia ylläpitää palvelua.",  # repeated unknown name
+                 "Katso Kanta-palvelujen tietosuojaseloste.",                 # name + Finnish word
+                 "Lisätietoja: www.tietosuoja.fi/fi/index/yhteystiedot.html",  # web address path
+                 "Tiedot saadaan Digi- ja väestötietovirastolta ja Verohallinnolta.")
+        for text in clean:
+            self.assertEqual([], [(e["kind"], e["text"]) for e in diagnostics(self.checker, text)
+                                  if not (e["kind"] == "grammar" and e.get("code") == 9)], text)
+        flagged = (("Sinlla on oikeus. Sinlla on myös velvollisuus.", ["Sinlla", "Sinlla"]),   # repeated typo
+                   ("Tiedot ovat Storian palvelimella. Storia-palveussa ne säilyvät.", ["Storia-palveussa"]),
+                   ("Lue Poito-oikeus tarkasti.", ["Poito-oikeus"]),               # typo, not a name
+                   ("Sivustomme käyttää Google Analytics-palvelua.", ["Analytics-palvelua"]))
+        for text, words in flagged:
+            self.assertEqual(words, [e["text"] for e in diagnostics(self.checker, text)], text)
+        errors = diagnostics(self.checker, "Sivustomme käyttää Google Analytics-palvelua.")
+        self.assertEqual(["Analytics -palvelua"], errors[0]["suggestions"])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -111,8 +111,8 @@ legitimate plain-text policies (`limitation:false-negative`):
 - Real-document residue (Kela privacy page, 119 blocks, 19 diagnostics after
   VOIKKO-017/018; none is a genuine error in the source): agency/page names seen
   once (`Automaattiset päätökset`, `Tietoluvat`), inconsistently cased words
-  (`Kirjaamo` vs `kirjaamoon`), and programme names `Eepos`, `Kanta`. (`PL`,
-  *toisio-* and `PDF`/`pdf` were fixed in VOIKKO-021/025/026.)
+  (`Kirjaamo` vs `kirjaamoon`). (`PL`, *toisio-*, `PDF`/`pdf`, programme
+  names and `Verohallinto` were fixed in VOIKKO-021/025/026/028.)
 - Organisation names (`coverage:dictionary-config`): 113 vocabulary entries
   flagged `orgname` (Fimea, Valvira, Nordea, Tekes, Siemens, Kone, …) are
   excluded from the default build. Building with
@@ -123,12 +123,11 @@ legitimate plain-text policies (`limitation:false-negative`):
   is no longer flagged, since *Kone* is also a company). Default left
   unchanged; choose per use case. `Verohallinto` and `Tilastokeskus` are
   accepted as compounds but get code 6 when capitalized; `Traficom` is absent.
-- `Digi- ja väestötietovirasto` gets code 6 on `Digi-`: a capitalized
-  suspended compound part starting a name is indistinguishable from a slip.
+- (`Digi-` in `Digi- ja väestötietovirasto` was fixed in VOIKKO-028.)
 - Second real document (Yle Abitreenit privacy notice, 45 blocks): 9
   diagnostics after VOIKKO-020; recall 39/40 injected typos (the one miss is
   inside an email address, which is never spell-checked by design). Residue:
-  product name `Abitreenit-`, surname `Hausen`, code 17 on bold run-in
+  surname `Hausen`, code 17 on bold run-in
   headings flattened into prose (`Oikeus saada pääsy tietoihisi.`), and one
   genuine source issue: a sentence ending in a URL without a full stop (code 9).
 - Correspondence guide (Kielitoimiston ohjepankki, *Sähköposti, kirje ja muut
@@ -138,7 +137,7 @@ legitimate plain-text policies (`limitation:false-negative`):
   and `PS Muista kokous.` (undotted PS) gets code 6 on `Muista`.
 - Third real document (Otava web-shop privacy policy, 26 blocks): 9
   diagnostics after VOIKKO-024, recall 34/35 (the miss is inside a URL). The
-  residue is unknown company names (`Storia`, `Paytrail`), the English gloss
+  residue (after VOIKKO-028) is the English gloss
   `Cookie`, and two genuine source issues: a capitalized common noun
   (`Tietosuojaselostetta`, code 6) and a sentence without a full stop (code 9).
   The page also has two real grammar errors that pass silently, illustrating the
@@ -268,6 +267,27 @@ legitimate plain-text policies (`limitation:false-negative`):
   https://kaino.kotus.fi/lataa/nykysuomensanalista2024.csv, licensed
   CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/); the index is
   derived from it, and the raw list is not redistributed.
+- VOIKKO-028 (`integration:document-names`, adapter policy + dictionary):
+  fewer false alarms on real documents without hiding typos.
+  - Unknown capitalized names recurring in a document (exactly or as a
+    4+-letter prefix: `Storia`/`Storian`, `Sava`/`Sava-Group`) are learned,
+    unless written in lowercase somewhere or every occurrence is one
+    keystroke from a known word (a repeated typo such as `Sinlla` stays
+    reported).
+  - Name + hyphen + Finnish word (`Kanta-palvelujen`, `Paytrail-tietosuojaseloste`)
+    passes when the Finnish part is valid and the name is not one keystroke
+    from a known word (`Poito-oikeus` stays reported). A typo after the hyphen
+    is still reported even for a learned name (`Abitreeni-palveussa`).
+  - After a capitalized name mid-sentence, Kotus's space-before-hyphen rule is
+    reported as code 1: `Google Analytics-palvelua` → `Analytics -palvelua`.
+  - Schemeless web addresses with a path (`www.tietosuoja.fi/fi/index/…`)
+    are not spell-checked; a suspended compound part (`Digi- ja …`) gets no
+    "write in lowercase"; `Verohallinto` added as a proper noun.
+  Measured on four real policies (Kela, Yle, Otava, Sava-Group): 46 warnings →
+  27, of which 15 are real source errors, 2 debatable and 12 false alarms
+  (names or titles seen once, English glosses, flattened bold headings).
+  Typo injection on the same documents: 570/574 caught; the 4 misses are typos
+  inside unknown names (`Stoia`, `Abitrenit`) or inside a URL.
 - VOIKKO-025's new `Poikkeavat_p` is verified compatible with the Sukija
   variant: its generator appends `Sukija_p` to `Sanasto_p` and keeps
   `Poikkeavat_p`; `vvfst-sukija` builds.

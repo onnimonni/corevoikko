@@ -18,6 +18,16 @@ DOMAIN = re.compile(r"(?i)^(?:[a-z0-9][a-z0-9-]*\.)+(?:fi|ax|eu|se|ee|no|dk|com|
                     r"(?:-(?P<suffix>\w+))?$")
 
 
+# Schemeless web address with a path: www.tietosuoja.fi/fi/index/yhteystiedot.html.
+# The tokenizer splits it at "/", so its parts are excluded from spelling.
+URL_PATH = re.compile(r"(?i)(?<![\w@.])(?:[a-z0-9][a-z0-9-]*\.)+(?:fi|ax|eu|se|ee|no|dk|com|org|net|info|io|gov|edu)"
+                      r"/[^\s,;)\]”\"]*")
+# Unknown capitalized name + hyphen + Finnish word: Kanta-palvelujen, Paytrail-tietosuojaseloste.
+NAME_COMPOUND = re.compile(r"^[A-ZÅÄÖ][\w]*-(?P<suffix>[a-zåäö]\w*)$")
+# A capitalized word mid-sentence directly before the compound: "käyttää Google Analytics-palvelua".
+MULTIWORD_NAME_BEFORE = re.compile(r"(?<=[\w,] )[A-ZÅÄÖ]\w* $")
+
+
 def _domain_valid(checker, word):
     match = DOMAIN.match(word)
     return bool(match) and (match.group("suffix") is None or checker.spell(match.group("suffix")))
@@ -110,31 +120,89 @@ def _base_forms(checker, word, cache):
     return cache[key]
 
 
-def apply_document_names(checker, document):
-    """Drop "write in lowercase" (code 6) for words the document consistently
-    capitalizes: a base form capitalized mid-sentence at least twice and never
-    written in lowercase is a name (Kela, Kelan, Kelassa), not a slip.
+def _capitalized_name(word):
+    """Name part of a capitalized, not all-caps word: Storian, Sava-Group -> Sava."""
+    name = word.split("-")[0]
+    return name if name[:1].isupper() and not name.isupper() and name.isalpha() else None
 
-    document: list of (text, diagnostics) pairs belonging to one document.
+
+def _name_compound_valid(checker, word):
+    """The name part cannot be checked; the Finnish part after the hyphen is.
+    A name part one keystroke from a known word (Poito- -> Poisto-) is a typo."""
+    match = NAME_COMPOUND.match(word)
+    if not (match and checker.spell(match.group("suffix"))):
+        return False
+    name = word.split("-")[0]
+    return checker.spell(name) or not any(_one_edit_apart(name, s) for s in checker.suggest(name))
+
+
+def _one_edit_apart(a, b):
+    """One insertion, deletion, substitution or adjacent transposition."""
+    a, b = a.lower(), b.lower()
+    if a == b or abs(len(a) - len(b)) > 1:
+        return False
+    if len(a) == len(b):
+        diff = [i for i in range(len(a)) if a[i] != b[i]]
+        return len(diff) == 1 or (len(diff) == 2 and diff[1] == diff[0] + 1
+                                   and a[diff[0]] == b[diff[1]] and a[diff[1]] == b[diff[0]])
+    short, long_ = (a, b) if len(a) < len(b) else (b, a)
+    return any(long_[:i] + long_[i + 1:] == short for i in range(len(long_)))
+
+
+def apply_document_names(checker, document):
+    """Document-level name learning. document: list of (text, diagnostics).
+
+    - "Write in lowercase" (code 6) is dropped for a base form capitalized
+      mid-sentence at least twice and never written in lowercase (Kela,
+      Kelan, Kelassa), and for a suspended compound part (Digi- ja ...).
+    - A capitalized unknown word is accepted as a name when its name part
+      recurs among the document's unknown capitalized words, either exactly or
+      as a prefix of at least 4 letters (Storia, Storian; Sava, Sava-Group),
+      is never written in lowercase, and at least one occurrence has no
+      spelling suggestion one keystroke away. A repeated typo (Sinlla x4 ->
+      Sinulla) therefore stays reported, as does a single unknown word.
     """
     cache = {}
     capitalized = {}
-    for _, diags in document:
+    names = []  # (name part, occurrence word)
+    for text, diags in document:
         for d in diags:
             if d["kind"] == "grammar" and d.get("code") == 6:
                 for base in _base_forms(checker, d["text"], cache):
                     capitalized[base] = capitalized.get(base, 0) + 1
+            elif d["kind"] == "spelling" and (name := _capitalized_name(d["text"])):
+                names.append((name, d["text"]))
+        # Accepted name compounds (Paytrail-tietosuojaseloste) are occurrences too.
+        for token in checker.tokens(text):
+            if (NAME_COMPOUND.match(token.tokenText) and (name := _capitalized_name(token.tokenText))
+                    and not checker.spell(name)):
+                names.append((name, token.tokenText))
     candidates = {base for base, count in capitalized.items() if count >= 2}
-    if candidates:
+    family = {n: [w for m, w in names if min(len(n), len(m)) >= 4 and (n.startswith(m) or m.startswith(n))]
+              for n, _ in names}
+    learned = {n for n, words in family.items() if len(words) >= 2 and any(
+        not any(_one_edit_apart(w, s) for s in checker.suggest(w)) for w in set(words))}
+    if candidates or learned:
         for text, _ in document:
             for token in checker.tokens(text):
                 word = token.tokenText
                 if token.tokenType == Token.WORD and word[:1].islower():
                     candidates -= _base_forms(checker, word, cache)
-    return [(text, [d for d in diags if not (
-                d["kind"] == "grammar" and d.get("code") == 6
-                and _base_forms(checker, d["text"], cache) & candidates)])
-            for text, diags in document]
+                    if word.isalpha():
+                        learned = {n for n in learned if not word.startswith(n.lower())}
+
+    def keep(d):
+        if d["kind"] == "grammar" and d.get("code") == 6:
+            return not (d["text"].endswith("-") or _base_forms(checker, d["text"], cache) & candidates)
+        # Learned names only excuse the name itself: not compound-linking
+        # findings, and not a typo in a Finnish part after a hyphen
+        # (Abitreeni-palveussa); a capitalized part continues the name (Sava-Group).
+        if d["kind"] != "spelling" or _capitalized_name(d["text"]) not in learned or checker.spell(d["text"]):
+            return True
+        _, _, rest = d["text"].partition("-")
+        return bool(rest) and not (rest[:1].isupper() or checker.spell(rest))
+    return [(text, [d for d in diags if keep(d)]) for text, diags in document]
+
 
 # Closing formulas listed in Kielitoimiston ohjepankki, "Sähköposti, kirje ja
 # muut viestit": "Lopputervehdyksen jäljessä ei käytetä pilkkua".
@@ -167,14 +235,17 @@ def _closing_comma_diagnostics(text):
 def diagnostics(checker, text, document_names=True):
     result = []
     offset = 0
+    url_spans = [m.span() for m in URL_PATH.finditer(text)]
     for token in checker.tokens(text):
         word = token.tokenText
         if text[offset:offset + len(word)] != word:
             raise RuntimeError("Tokenizer lost text alignment")
+        in_url = any(start <= offset and offset + len(word) <= end for start, end in url_spans)
         # Letterless tokens (Y-tunnus 1234567-8, phone numbers, ISO dates) are
         # identifiers, not words that can be misspelled.
-        if token.tokenType == Token.WORD and any(c.isalpha() for c in word):
-            valid = checker.spell(word) or _domain_valid(checker, word)
+        if token.tokenType == Token.WORD and any(c.isalpha() for c in word) and not in_url:
+            valid = (checker.spell(word) or _domain_valid(checker, word)
+                     or _name_compound_valid(checker, word))
             if not valid and text[offset + len(word):offset + len(word) + 1] == ".":
                 # The default tokenizer leaves abbreviation/date dots separate.
                 valid = checker.spell(word + ".")
@@ -184,6 +255,12 @@ def diagnostics(checker, text, document_names=True):
             elif "-" not in word and (fixes := established_compound_suggestions(checker, word)):
                 result.append({"kind": "spelling", "start": offset, "end": offset + len(word),
                                "text": word, "suggestions": fixes})
+            elif NAME_COMPOUND.match(word) and MULTIWORD_NAME_BEFORE.search(text[:offset]):
+                # Kotus: a multiword name takes a space before the hyphen
+                # (Google Analytics -palvelu), not Google Analytics-palvelu.
+                result.append({"kind": "grammar", "code": 1, "start": offset, "end": offset + len(word),
+                               "text": word, "description": "Monisanaisen nimen jälkeen: välilyönti ennen yhdysmerkkiä.",
+                               "suggestions": [word.replace("-", " -", 1)]})
         offset += len(word)
     if offset != len(text):
         raise RuntimeError("Tokenizer did not consume the input")
