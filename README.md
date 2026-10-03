@@ -118,6 +118,12 @@ legitimate plain-text policies (`limitation:false-negative`):
   Others (`Verohallinto`, `Traficom`, `Tilastokeskus`) are absent altogether.
 - `Digi- ja väestötietovirasto` gets code 6 on `Digi-`: a capitalized
   suspended compound part starting a name is indistinguishable from a slip.
+- Second real document (Yle Abitreenit privacy notice, 45 blocks): 9
+  diagnostics after VOIKKO-020; recall 39/40 injected typos (the one miss is
+  inside an email address, which is never spell-checked by design). Residue:
+  product name `Abitreenit-`, surname `Hausen`, `PL`, code 17 on bold run-in
+  headings flattened into prose (`Oikeus saada pääsy tietoihisi.`), and one
+  genuine source issue: a sentence ending in a URL without a full stop (code 9).
 - Document structure (`limitation:document-structure`): the CLI applies one
   profile per file. Headings and list items need `title`/`list` profiles,
   which require structure from the source format (HTML/DOCX), not plain text.
@@ -190,6 +196,10 @@ legitimate plain-text policies (`limitation:false-negative`):
   proper noun in `vvfst/poikkeavat.lexc` with the same `kala` inflection as the
   common noun *kela* ("reel"), which was the only entry. A single `Kelan` or
   `Kelalle` no longer gets code 6; lowercase *kelalla* is still accepted.
+- VOIKKO-020 (`coverage:dictionary`): `ETA` (Euroopan talousalue) added with
+  back-vowel endings (`ETA:n`, `ETA:ssa`, `ETA-maissa`; `ETA:ssä` rejected).
+  It was absent, so every "EU- tai ETA-maissa" in a data-transfer section was
+  flagged.
 
 Current frozen-corpus result: **0 false positives**, **0 missed supported
 errors**, **27 detections**, **21/21 corrections**, **8 unsupported checks**.

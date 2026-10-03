@@ -79,6 +79,11 @@ class TextCheckerTest(unittest.TestCase):
         # The common noun "kela" (reel) is still accepted in lowercase.
         self.assertEqual([], diagnostics(self.checker, "Lanka on kelalla."))
 
+    def testEtaInflectsWithBackVowels(self):
+        self.assertEqual([True, True, True, True, False, False],
+                         [self.checker.spell(w) for w in
+                          ("ETA", "ETA:n", "ETA:ssa", "ETA-maissa", "ETA:ssä", "XYZ-maissa")])
+
 
 if __name__ == "__main__":
     unittest.main()

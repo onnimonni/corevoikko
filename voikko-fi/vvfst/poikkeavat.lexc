@@ -21,6 +21,8 @@
 LEXICON Poikkeavat_a
 ! GDPR: EU:n yleinen tietosuoja-asetus. Local addition; joukahainen.xml is a refreshed export.
 [La][Xr]jjjj[X][Xp]GDPR[X]gdpr:gdpr	Lyhenne_ä	;
+! ETA: Euroopan talousalue (read as "eta"; ETA:n, ETA:ssa, ETA-maissa).
+[La][Xr]jjj[X][Xp]ETA[X]eta:eta	Lyhenne_a	;
 [La][Xp]h[X]h%:eissa:h%:eissa	Liitesana_a	;
 [La][Xp]h[X]h%:eineen:h%:eineen	Liitesana_a	;
 [La][Xp]h[X]h%:eina:h%:eina	Liitesana_a	;
