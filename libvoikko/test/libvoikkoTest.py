@@ -198,6 +198,14 @@ class LibvoikkoTest(unittest.TestCase):
         text = u"Löytyvätkö tiedot osoitteesta https://www.kela.fi/tietosuoja?"
         self.assertEqual([], self.voikko.grammarErrors(text, "fi"))
 
+    def testTrailingSymbolsDoNotHideMissingPunctuation(self):
+        symbol = u"\U0001F60A"
+        for suffix in (u" ", u" " + symbol):
+            self.assertEqual([], self.voikko.grammarErrors(u"Kiitos!" + suffix, "fi"))
+            errors = self.voikko.grammarErrors(u"Tiedot poistetaan" + suffix, "fi")
+            self.assertEqual([(9, 7, 10)],
+                             [(e.errorCode, e.startPos, e.errorLen) for e in errors])
+
     def testAnalyze(self):
         analysisList = self.voikko.analyze(u"kansaneläkehakemus")
         self.assertEqual(1, len(analysisList))

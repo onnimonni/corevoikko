@@ -227,9 +227,18 @@ void gc_end_punctuation(VoikkoHandle * options, const Paragraph * paragraph) {
 	if (options->accept_unfinished_paragraphs_in_gc) return;
 	if (options->accept_bulleted_lists_in_gc) return;
 	
-	Sentence * sentence = paragraph->sentences[paragraph->sentenceCount - 1];
-	Token * token = &sentence->tokens[sentence->tokenCount - 1];
-	if (token->type == TOKEN_PUNCTUATION) return;
+	const Token * token = 0;
+	for (size_t i = paragraph->sentenceCount; i > 0 && !token; --i) {
+		const Sentence * sentence = paragraph->sentences[i - 1];
+		for (size_t j = sentence->tokenCount; j > 0; --j) {
+			const Token * candidate = &sentence->tokens[j - 1];
+			if (candidate->type == TOKEN_WORD || candidate->type == TOKEN_PUNCTUATION) {
+				token = candidate;
+				break;
+			}
+		}
+	}
+	if (!token || token->type == TOKEN_PUNCTUATION) return;
 	CacheEntry * e = new CacheEntry(0);
 	e->error.legacyError.error_code = GCERR_TERMINATING_PUNCTUATION_MISSING;
 	e->error.legacyError.startpos = token->pos;

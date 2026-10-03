@@ -99,6 +99,9 @@ spelling/grammar result establishes privacy-law compliance or factual accuracy.
 - VOIKKO-008/009: spelling also checks a token with its following original dot
   when necessary. Abbreviations and dot-terminated dates/times no longer produce
   lexical false alarms; absent dots and misspelled words are not silently accepted.
+- VOIKKO-004: terminal-punctuation checking skips trailing whitespace and
+  non-language symbols, including across sentence boundaries. Symbols do not
+  conceal a missing punctuation mark after an actual word.
 
 
 ### Reviewed public sources
