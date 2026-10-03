@@ -108,6 +108,12 @@ spelling/grammar result establishes privacy-law compliance or factual accuracy.
 - VOIKKO-010: unfinished/message checking does not treat a wordless symbolic
   fragment as a linguistic sentence start. Duplicate commas and invalid starts
   of actual linguistic sentences remain checked; strict prose is unchanged.
+- VOIKKO-011 (P1 `bug:memory-safety`, found after the baseline): the grammar
+  cache compared input with `wcscmp`, ignoring the documented length of
+  `voikkoNextGrammarErrorUcs4`. A correctly bounded buffer without a
+  terminating NUL was read out of bounds; a guarded-page repro crashed with
+  SIGBUS. A shorter bound on the same text also returned a stale error lying
+  outside the bound. The cache now stores and compares the exact length.
 
 Current frozen-corpus result: **0 false positives**, **0 missed supported
 errors**, **27 detections**, **21/21 corrections**, **8 unsupported checks**.

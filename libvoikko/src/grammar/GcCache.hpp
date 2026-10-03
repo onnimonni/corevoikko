@@ -30,6 +30,7 @@
 #define VOIKKO_GRAMMAR_GCCACHE_HPP
 
 #include "grammar/CacheEntry.hpp"
+#include <cstddef>
 
 namespace libvoikko { namespace grammar {
 
@@ -47,8 +48,11 @@ class GcCache {
 	/** Add a new error for currently cached paragraph */
 	void appendError(grammar::CacheEntry * newEntry);
 	
-	/** Null terminated string containing the paragraph text. */
+	/** Copy of the cached paragraph text; may contain NUL characters. */
 	wchar_t * paragraph;
+	
+	/** Number of characters in the cached paragraph. */
+	size_t paragraphLength;
 	
 	/** First error in linked list. */
 	grammar::CacheEntry * firstError;

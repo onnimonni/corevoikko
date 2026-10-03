@@ -215,6 +215,20 @@ class LibvoikkoTest(unittest.TestCase):
         errors = self.voikko.grammarErrors(u"Kiitos! : Tiedot poistetaan.", "fi")
         self.assertIn(5, [e.errorCode for e in errors])
 
+    def testGrammarCacheRespectsSuppliedLength(self):
+        lib = self.voikko._Voikko__lib
+        handle = self.voikko._Voikko__handle
+        text = u"Olen joten kuten."
+        error = lib.voikkoNextGrammarErrorUcs4(handle, text, len(text), 0, 0)
+        self.assertEqual(1, lib.voikkoGetGrammarErrorCode(error))
+        lib.voikkoFreeGrammarError(error)
+        # Same text, shorter bound: analyse "Olen" itself, not the cached 5:16 span.
+        error = lib.voikkoNextGrammarErrorUcs4(handle, text, 4, 0, 0)
+        self.assertEqual((9, 0, 4), (lib.voikkoGetGrammarErrorCode(error),
+                                     lib.voikkoGetGrammarErrorStartPos(error),
+                                     lib.voikkoGetGrammarErrorLength(error)))
+        lib.voikkoFreeGrammarError(error)
+
     def testAnalyze(self):
         analysisList = self.voikko.analyze(u"kansaneläkehakemus")
         self.assertEqual(1, len(analysisList))

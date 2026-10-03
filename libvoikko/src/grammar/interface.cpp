@@ -43,10 +43,10 @@ VOIKKOEXPORT VoikkoGrammarError * voikkoNextGrammarErrorUcs4(VoikkoHandle * opti
 		return 0;
 	}
 	const VoikkoGrammarError * c_error =
-	    options->grammarChecker->errorFromCache(text_ucs4, startpos, skiperrors);
+	    options->grammarChecker->errorFromCache(text_ucs4, wtextlen, startpos, skiperrors);
 	if (!c_error) {
 		options->grammarChecker->paragraphToCache(text_ucs4, wtextlen);
-		c_error = options->grammarChecker->errorFromCache(text_ucs4, startpos, skiperrors);
+		c_error = options->grammarChecker->errorFromCache(text_ucs4, wtextlen, startpos, skiperrors);
 	}
 	
 	if (!c_error || c_error->getErrorCode() == 0) {
