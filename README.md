@@ -97,9 +97,14 @@ legitimate plain-text policies (`limitation:false-negative`):
 - Valid-looking compounds can hide typos: `Ystävälisin` parses as *ystävä* +
   *lisin* (`limitation:compound-overgeneration`). Individual frequent cases go
   to the autocorrect list (see VOIKKO-016).
-- Suggestion ranking: `tietosuja` never suggests `tietosuoja`; inserting `o`
-  is a late, low-priority generator, and the split `tiet osuja` ranks first
-  (`limitation:suggestion-ranking`).
+- Suggestion ranking (`limitation:suggestion-ranking`): `tietosuja` never
+  suggests `tietosuoja`. Candidates are ranked `priority × (discovery index + 5)`
+  and only the top 5 are returned, so a word found by a late generator (e.g.
+  inserting `o`) cannot outrank five earlier ones. Tested and ruled out as
+  levers: insertion alphabet order, doubling the cost budget (800→1600) and
+  doubling the candidate cap (15→30) — none changed recovery on 1,375
+  single-deletion typos (top-1 47.6%, any rank 93.0%). A fix needs a ranking
+  redesign validated on a larger suggestion gold set than upstream's 68 lines.
 
 ### Retained fixes
 
