@@ -61,6 +61,16 @@ class TextCheckerTest(unittest.TestCase):
         self.assertEqual(["Taskun", "Taskun"],
                          [e["text"] for e in mixed if e.get("code") == 6])
 
+    def testSchemelessDomainsAreNotMisspellings(self):
+        configure(self.checker, "prose")
+        for text in ("Lisätietoja saat osoitteesta tietosuoja.fi.",
+                     "Kirjaudu Suomi.fi-tunnisteella palveluun."):
+            self.assertEqual([], diagnostics(self.checker, text), text)
+        for text, word in (("Kirjaudu Suomi.fi-tunnisteela palveluun.", "Suomi.fi-tunnisteela"),
+                           ("Tiedot kissa.koira poistetaan.", "kissa.koira")):
+            self.assertEqual([("spelling", word)],
+                             [(e["kind"], e["text"]) for e in diagnostics(self.checker, text)])
+
 
 if __name__ == "__main__":
     unittest.main()

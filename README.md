@@ -106,12 +106,12 @@ legitimate plain-text policies (`limitation:false-negative`):
   never generated. Insertion order, doubling the cost budget and doubling the
   candidate cap changed nothing. A fix needs a ranking redesign validated on
   a larger suggestion gold set than upstream's 68 lines.
-- Real-document residue (Kela privacy page, 119 blocks, 23 diagnostics after
-  VOIKKO-017; none is a genuine error in the source): agency/page names seen
-  once (`Verohallinnolta`, `Automaattiset päätökset`, `Tietoluvat`),
-  inconsistently cased words (`Kirjaamo` vs `kirjaamoon`), schemeless domains
-  (`tietosuoja.fi`, `Suomi.fi-tunnisteella`), and dictionary gaps (`toisiolaki`,
-  lowercase `pdf`, `PL` = postilokero, programme names `Eepos`, `Kanta`).
+- Real-document residue (Kela privacy page, 119 blocks, 19 diagnostics after
+  VOIKKO-017/018; none is a genuine error in the source): agency/page names seen
+  once (`Automaattiset päätökset`, `Tietoluvat`), inconsistently cased words
+  (`Kirjaamo` vs `kirjaamoon`), and dictionary gaps — the prefix *toisio-*
+  (`toisiolaki`, `toisiokäyttö`), standalone `PDF`/`pdf`, `PL` (postilokero),
+  programme names `Eepos`, `Kanta`.
 - Document structure (`limitation:document-structure`): the CLI applies one
   profile per file. Headings and list items need `title`/`list` profiles,
   which require structure from the source format (HTML/DOCX), not plain text.
@@ -176,6 +176,10 @@ legitimate plain-text policies (`limitation:false-negative`):
   for it — `Kela`, `Kelan`, `Kelassa` (*kela* is also "reel"). On the Kela
   privacy page this removed 42 of 65 diagnostics. Single capitalized slips and
   words also written in lowercase in the same document stay reported.
+- VOIKKO-018 (`integration:spelling-adapter`): schemeless domains on common
+  TLDs (`tietosuoja.fi`, `kela.fi`) are not spell-checked; a hyphen-attached
+  ending is (`Suomi.fi-tunnisteella` passes, `…-tunnisteela` is flagged). A
+  missing space after a full stop (`kissa.koira`) is still reported.
 
 Current frozen-corpus result: **0 false positives**, **0 missed supported
 errors**, **27 detections**, **21/21 corrections**, **8 unsupported checks**.

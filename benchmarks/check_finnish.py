@@ -3,11 +3,23 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+import re
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "libvoikko/python"))
 from libvoikko import Token, Voikko  # noqa: E402
+
+# Schemeless domain, optionally with a hyphen-attached Finnish ending:
+# kela.fi, Suomi.fi-tunnisteella. Restricted to common TLDs so a missing space
+# after a full stop (kissa.koira) is still checked as a word.
+DOMAIN = re.compile(r"(?i)^(?:[a-z0-9][a-z0-9-]*\.)+(?:fi|ax|eu|se|ee|no|dk|com|org|net|info|io|gov|edu)"
+                    r"(?:-(?P<suffix>\w+))?$")
+
+
+def _domain_valid(checker, word):
+    match = DOMAIN.match(word)
+    return bool(match) and (match.group("suffix") is None or checker.spell(match.group("suffix")))
 
 
 def configure(checker, profile):
@@ -71,7 +83,7 @@ def diagnostics(checker, text, document_names=True):
         # Letterless tokens (Y-tunnus 1234567-8, phone numbers, ISO dates) are
         # identifiers, not words that can be misspelled.
         if token.tokenType == Token.WORD and any(c.isalpha() for c in word):
-            valid = checker.spell(word)
+            valid = checker.spell(word) or _domain_valid(checker, word)
             if not valid and text[offset + len(word):offset + len(word) + 1] == ".":
                 # The default tokenizer leaves abbreviation/date dots separate.
                 valid = checker.spell(word + ".")
