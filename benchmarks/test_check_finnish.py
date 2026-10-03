@@ -114,6 +114,11 @@ class TextCheckerTest(unittest.TestCase):
                          [self.checker.spell(w) for w in ("toisiokäyttö", "toisiolaki", "toisiolain",
                                                           "toisiokäyttöä", "toisio", "toisiokäytö")])
 
+    def testPdfBothCases(self):
+        self.assertEqual([True, True, True, True, True, False],
+                         [self.checker.spell(w) for w in ("PDF", "pdf", "PDF:nä", "pdf-tiedosto",
+                                                          "PDF-tiedostona", "PDF:na")])
+
 
 if __name__ == "__main__":
     unittest.main()

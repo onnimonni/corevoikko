@@ -110,9 +110,8 @@ legitimate plain-text policies (`limitation:false-negative`):
 - Real-document residue (Kela privacy page, 119 blocks, 19 diagnostics after
   VOIKKO-017/018; none is a genuine error in the source): agency/page names seen
   once (`Automaattiset päätökset`, `Tietoluvat`), inconsistently cased words
-  (`Kirjaamo` vs `kirjaamoon`), and dictionary gaps — standalone `PDF`/`pdf`,
-  programme names `Eepos`, `Kanta`. (`PL` and *toisio-* were fixed in
-  VOIKKO-021/025.)
+  (`Kirjaamo` vs `kirjaamoon`), and programme names `Eepos`, `Kanta`. (`PL`,
+  *toisio-* and `PDF`/`pdf` were fixed in VOIKKO-021/025/026.)
 - Organisation names (`coverage:dictionary-config`): 113 vocabulary entries
   flagged `orgname` (Fimea, Valvira, Nordea, Tekes, Siemens, Kone, …) are
   excluded from the default build. Building with
@@ -242,6 +241,9 @@ legitimate plain-text policies (`limitation:false-negative`):
   with the same compounding as its counterpart *ensiö-*, via a new
   `Poikkeavat_p` lexicon wired into `Sanasto_p`. `toisiokäyttö`, `toisiolain`
   and `toisioraaka-aine` pass; bare `toisio` and `toisiokäytö` are rejected.
+- VOIKKO-026 (`coverage:dictionary`): `PDF ~ pdf` (both endorsed in
+  Kielitoimiston ohjepankki's lyhenneluettelo) added with front-vowel endings:
+  `PDF:nä`, `pdf-tiedosto`, `PDF-tiedostona` pass; `PDF:na` is rejected.
 
 Current frozen-corpus result: **0 false positives**, **0 missed supported
 errors**, **27 detections**, **21/21 corrections**; 1 of the 8 unsupported

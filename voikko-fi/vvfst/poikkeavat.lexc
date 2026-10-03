@@ -30,6 +30,9 @@ LEXICON Poikkeavat_a
 [La][Xr]jqj[X][Xp]P.S.[X]p.s.:p.s.	PisteellisenLyhenteenJatko_ä	;
 ! IP: Internet Protocol (Kielitoimiston ohjepankki, lyhenneluettelo I), read "ii-pee": IP:n, IP:tä, IP-osoite.
 [La][Xr]jj[X][Xp]IP[X]ip:ip	Lyhenne_ä	;
+! PDF ~ pdf: Portable Document Format (Kielitoimiston ohjepankki, lyhenneluettelo P), read "pee-dee-äf".
+[La][Xr]jjj[X][Xp]PDF[X]pdf:pdf	Lyhenne_ä	;
+[La][Xp]pdf[X]pdf:pdf	Lyhenne_ä	;
 [La][Xp]h[X]h%:eissa:h%:eissa	Liitesana_a	;
 [La][Xp]h[X]h%:eineen:h%:eineen	Liitesana_a	;
 [La][Xp]h[X]h%:eina:h%:eina	Liitesana_a	;
