@@ -96,6 +96,9 @@ spelling/grammar result establishes privacy-law compliance or factual accuracy.
   while query separators and parameters inside URLs remain intact.
 - VOIKKO-007: the standard dictionary now includes the sourced verb
   `pseudonymisoida`, with regular inflection and derived `pseudonymisointi`.
+- VOIKKO-008/009: spelling also checks a token with its following original dot
+  when necessary. Abbreviations and dot-terminated dates/times no longer produce
+  lexical false alarms; absent dots and misspelled words are not silently accepted.
 
 
 ### Reviewed public sources

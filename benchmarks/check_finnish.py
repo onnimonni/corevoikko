@@ -33,9 +33,14 @@ def diagnostics(checker, text):
         word = token.tokenText
         if text[offset:offset + len(word)] != word:
             raise RuntimeError("Tokenizer lost text alignment")
-        if token.tokenType == Token.WORD and not checker.spell(word):
-            result.append({"kind": "spelling", "start": offset, "end": offset + len(word),
-                           "text": word, "suggestions": checker.suggest(word)})
+        if token.tokenType == Token.WORD:
+            valid = checker.spell(word)
+            if not valid and text[offset + len(word):offset + len(word) + 1] == ".":
+                # The default tokenizer leaves abbreviation/date dots separate.
+                valid = checker.spell(word + ".")
+            if not valid:
+                result.append({"kind": "spelling", "start": offset, "end": offset + len(word),
+                               "text": word, "suggestions": checker.suggest(word)})
         offset += len(word)
     if offset != len(text):
         raise RuntimeError("Tokenizer did not consume the input")
