@@ -168,6 +168,13 @@ class LibvoikkoTest(unittest.TestCase):
         self.assertEqual(16, error.startPos)
         self.assertEqual(11, error.errorLen)
 
+    def testGrammarErrorAfterTwoHundredSentences(self):
+        prefix = u"Talo on talo. " * 200
+        text = prefix + u"Se oli joten kuten."
+        errors = self.voikko.grammarErrors(text, "fi")
+        self.assertEqual([(1, len(prefix) + 7, 11)],
+                         [(e.errorCode, e.startPos, e.errorLen) for e in errors])
+
     def testAnalyze(self):
         analysisList = self.voikko.analyze(u"kansaneläkehakemus")
         self.assertEqual(1, len(analysisList))

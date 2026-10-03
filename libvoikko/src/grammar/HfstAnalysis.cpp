@@ -146,10 +146,10 @@ Paragraph * HfstAnalysis::analyseParagraph(const wchar_t * text, size_t textlen)
 			return 0;
 		}
 		s->type = st;
-		p->sentences[p->sentenceCount++] = s;
+		p->sentences.push_back(s);
+		p->sentenceCount++;
 		pos += sentencelen;
-	} while (st != SENTENCE_NONE && st != SENTENCE_NO_START &&
-	         p->sentenceCount < Paragraph::MAX_SENTENCES_IN_PARAGRAPH);
+	} while (st != SENTENCE_NONE && st != SENTENCE_NO_START);
 	return p;
 }
 

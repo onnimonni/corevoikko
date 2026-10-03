@@ -83,6 +83,13 @@ Embedded NUL is unsupported grammar input and can silently return no findings.
 Adjacent verb A/MA-infinitive government **is** implemented and scored. No
 spelling/grammar result establishes privacy-law compliance or factual accuracy.
 
+### Retained fixes
+
+- VOIKKO-002: grammar analysis now stores every sentence in a paragraph instead
+  of truncating at 200. Sentence 201 is checked with correct original offsets,
+  without the truncation-induced punctuation warning.
+
+
 ### Reviewed public sources
 
 Short attributed excerpts, stored locally; URLs are provenance, never benchmark
