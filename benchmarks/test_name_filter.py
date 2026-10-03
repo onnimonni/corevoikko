@@ -87,6 +87,16 @@ class NameFilterCheckerTest(unittest.TestCase):
         found = self.found("Rekisterinpitäjänä toimii CONCOCONNENTE Oy.")
         self.assertEqual([], [d for d in found if d[0] == "name"])
 
+    def testStaleRegisterIsFlaggedAfter30Days(self):
+        def finding(age):
+            date = (datetime.date.today() - datetime.timedelta(days=age)).isoformat()
+            self.checker._names = NameFilter.build(["Storia Oy"], {"prh_complete": True, "prh_register_date": date})
+            return diagnostics(self.checker, "Rekisterinpitäjänä toimii CONCOCONNENTE Oy.")[0]
+        self.assertFalse(finding(30)["stale"])
+        self.assertNotIn("päivää vanha", finding(30)["description"])
+        self.assertTrue(finding(31)["stale"])
+        self.assertIn("Rekisteritieto on 31 päivää vanha", finding(31)["description"])
+
     def testSnapshotDateComesFromPrhZip(self):
         from build_name_filter import prh_names
         with tempfile.TemporaryDirectory() as tmp:

@@ -183,6 +183,10 @@ def _multiword_name(checker, prev, word):
                                           and a.get("SIJAMUOTO") == "nimento" for a in checker.analyze(prev))
 
 
+# A register snapshot older than this may miss newly registered companies.
+REGISTER_MAX_AGE_DAYS = 30
+
+
 def _company_diagnostics(checker, text):
     """With a filter built from the PRH register: report "<Name> Oy" mentions
     whose name is not a registered company name. A Bloom filter has no false
@@ -201,10 +205,14 @@ def _company_diagnostics(checker, text):
             start = text.index(words[1], start)
         end = match.end("form")
         as_of = datetime.date.fromisoformat(names.register_date)
+        description = (f"Yritystä ei löydy kaupparekisteristä (PRH, tilanne "
+                       f"{as_of.day}.{as_of.month}.{as_of.year}): tarkista nimi.")
+        age = (datetime.date.today() - as_of).days
+        if age > REGISTER_MAX_AGE_DAYS:
+            description += f" Rekisteritieto on {age} päivää vanha: uusi yritys voi puuttua."
         result.append({"kind": "name", "code": None, "start": start, "end": end, "text": text[start:end],
-                       "description": f"Yritystä ei löydy kaupparekisteristä (PRH, tilanne "
-                                      f"{as_of.day}.{as_of.month}.{as_of.year}): tarkista nimi.",
-                       "as_of": names.register_date, "suggestions": []})
+                       "description": description, "as_of": names.register_date,
+                       "stale": age > REGISTER_MAX_AGE_DAYS, "suggestions": []})
     return result
 
 

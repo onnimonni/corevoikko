@@ -308,7 +308,9 @@ legitimate plain-text policies (`limitation:false-negative`):
     companies. A Bloom filter has no false negatives, so such a finding means
     the name is absent from that snapshot; a false positive only hides a
     finding. Associations (`ry`, separate Register of Associations) and `Tmi`
-    are never reported.
+    are never reported. A snapshot older than 30 days is still used, but the
+    finding gets `"stale": true` and "Rekisteritieto on N päivää vanha: uusi
+    yritys voi puuttua."
   - Any filter excuses known names as spelling errors, also inflected
     (`Storian`, `Paytrailin`, `Kanta-`); a word that only occurs inside a
     multiword name is excused only if it is not one keystroke from a Finnish
