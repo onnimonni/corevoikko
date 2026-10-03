@@ -24,6 +24,7 @@ def configure(checker, profile):
     checker.setAcceptTitlesInGc(profile in {"title", "message"})
     checker.setAcceptUnfinishedParagraphsInGc(profile == "message")
     checker.setAcceptBulletedListsInGc(profile == "list")
+    checker._finnish_text_profile = profile
 
 
 def diagnostics(checker, text):
@@ -44,8 +45,31 @@ def diagnostics(checker, text):
         offset += len(word)
     if offset != len(text):
         raise RuntimeError("Tokenizer did not consume the input")
-    for error in checker.grammarErrors(text, "fi"):
+    grammar_text = text
+    boundaries = None
+    if getattr(checker, "_finnish_text_profile", None) == "message":
+        characters = []
+        boundaries = [0]
+        line_end = None
+        for index, character in enumerate(text):
+            if character == "\r" and text[index:index + 2] == "\r\n":
+                continue
+            if character == "\n":
+                # A comma-ending line continues the same sentence, not a new paragraph.
+                if line_end == ",":
+                    character = " "
+                line_end = None
+            elif character not in " \t":
+                line_end = character
+            characters.append(character)
+            boundaries.append(index + 1)
+        grammar_text = "".join(characters)
+    for error in checker.grammarErrors(grammar_text, "fi"):
         start, end = error.startPos, error.startPos + error.errorLen
+        if not 0 <= start <= end <= len(grammar_text):
+            raise RuntimeError("Invalid normalized grammar diagnostic span")
+        if boundaries is not None:
+            start, end = boundaries[start], boundaries[end]
         if not 0 <= start <= end <= len(text):
             raise RuntimeError("Invalid grammar diagnostic span")
         result.append({"kind": "grammar", "code": error.errorCode, "start": start,

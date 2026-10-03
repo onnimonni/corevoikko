@@ -102,6 +102,12 @@ spelling/grammar result establishes privacy-law compliance or factual accuracy.
 - VOIKKO-004: terminal-punctuation checking skips trailing whitespace and
   non-language symbols, including across sentence boundaries. Symbols do not
   conceal a missing punctuation mark after an actual word.
+- VOIKKO-005: the message profile retains comma-ended line continuations and
+  maps normalized CRLF grammar spans back to original code-point positions.
+  Exclamation-ended greetings still require correct sentence capitalization.
+
+Native adapter regressions, after the benchmark build:
+`devenv --offline shell -- uv run --offline --no-project python -m unittest -v benchmarks.test_check_finnish`
 
 
 ### Reviewed public sources
