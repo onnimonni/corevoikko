@@ -48,6 +48,19 @@ class TextCheckerTest(unittest.TestCase):
         self.assertEqual([True, True, True, False],
                          [self.checker.spell(w) for w in ("GDPR:n", "GDPR:ää", "GDPR:ssä", "GDPR:aa")])
 
+    def testConsistentlyCapitalizedNamesAreLearnedPerDocument(self):
+        configure(self.checker, "prose")
+        text = "Tiedot ovat Kelan rekisterissä. Kela ei poista niitä, vaan Kelalle ne kuuluvat."
+        self.assertEqual([], diagnostics(self.checker, text))
+        # A single capitalized slip is still reported.
+        single = diagnostics(self.checker, "Avaimet löytyivät Reetan Taskun pohjalta.")
+        self.assertEqual([("grammar", 6, "Taskun")], [(e["kind"], e.get("code"), e["text"]) for e in single])
+        # Capitalized twice but also written in lowercase: inconsistent, still reported.
+        mixed = diagnostics(self.checker,
+                            "Avaimet ovat Taskun pohjalla ja Taskun reunalla, mutta taskun pohja on tyhjä.")
+        self.assertEqual(["Taskun", "Taskun"],
+                         [e["text"] for e in mixed if e.get("code") == 6])
+
 
 if __name__ == "__main__":
     unittest.main()

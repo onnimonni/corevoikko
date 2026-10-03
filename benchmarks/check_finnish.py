@@ -27,7 +27,41 @@ def configure(checker, profile):
     checker._finnish_text_profile = profile
 
 
-def diagnostics(checker, text):
+def _base_forms(checker, word, cache):
+    key = word.lower()
+    if key not in cache:
+        cache[key] = {a["BASEFORM"].lower() for a in checker.analyze(key) if a.get("BASEFORM")} or {key}
+    return cache[key]
+
+
+def apply_document_names(checker, document):
+    """Drop "write in lowercase" (code 6) for words the document consistently
+    capitalizes: a base form capitalized mid-sentence at least twice and never
+    written in lowercase is a name (Kela, Kelan, Kelassa), not a slip.
+
+    document: list of (text, diagnostics) pairs belonging to one document.
+    """
+    cache = {}
+    capitalized = {}
+    for _, diags in document:
+        for d in diags:
+            if d["kind"] == "grammar" and d.get("code") == 6:
+                for base in _base_forms(checker, d["text"], cache):
+                    capitalized[base] = capitalized.get(base, 0) + 1
+    candidates = {base for base, count in capitalized.items() if count >= 2}
+    if candidates:
+        for text, _ in document:
+            for token in checker.tokens(text):
+                word = token.tokenText
+                if token.tokenType == Token.WORD and word[:1].islower():
+                    candidates -= _base_forms(checker, word, cache)
+    return [(text, [d for d in diags if not (
+                d["kind"] == "grammar" and d.get("code") == 6
+                and _base_forms(checker, d["text"], cache) & candidates)])
+            for text, diags in document]
+
+
+def diagnostics(checker, text, document_names=True):
     result = []
     offset = 0
     for token in checker.tokens(text):
@@ -78,7 +112,10 @@ def diagnostics(checker, text):
                        "end": end, "text": text[start:end],
                        "description": error.shortDescription,
                        "suggestions": list(error.suggestions)})
-    return sorted(result, key=lambda d: (d["start"], d["end"], d["kind"]))
+    result = sorted(result, key=lambda d: (d["start"], d["end"], d["kind"]))
+    if document_names:
+        result = apply_document_names(checker, [(text, result)])[0][1]
+    return result
 
 
 def matches(expected, actual):
