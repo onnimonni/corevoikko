@@ -33,7 +33,10 @@
 namespace libvoikko { namespace grammar { namespace check {
 
 void MissingVerbCheck::check(VoikkoHandle * options, const Sentence * sentence) {
-	const Token * firstToken = sentence->tokens;
+	if (sentence->tokenCount == 0) {
+		return;
+	}
+	const Token * firstToken = sentence->tokens.data();
 	if (firstToken->type == TOKEN_PUNCTUATION) {
 		return;
 	}
@@ -47,7 +50,7 @@ void MissingVerbCheck::check(VoikkoHandle * options, const Sentence * sentence) 
 	bool foundVerbInCurrentClause = false;
 	size_t lastVerbStartToken = 0;
 	for (size_t i = 0; i < sentence->tokenCount; i++) {
-		const Token * token = sentence->tokens + i;
+		const Token * token = &sentence->tokens[i];
 		if (token->str[0] == L'\t') {
 			return;
 		}
@@ -63,12 +66,12 @@ void MissingVerbCheck::check(VoikkoHandle * options, const Sentence * sentence) 
 				foundVerbInCurrentClause = false;
 			}
 			else if (i + 2 < sentence->tokenCount && wcsncmp(token->str, L"siin\u00e4", 5) == 0 &&
-			         wcsncmp((sentence->tokens + (i + 2))->str, L"miss\u00e4", 5) == 0) {
+			         wcsncmp(sentence->tokens[i + 2].str, L"miss\u00e4", 5) == 0) {
 				// "siinä missä" voi erottaa lauseita ilman pilkkua. TODO: siistimpi toteutus
 				foundVerbInCurrentClause = false;
 			}
 			else if (i + 2 < sentence->tokenCount && wcsncmp(token->str, L"k\u00e4vi", 4) == 0 &&
-			         wcsncmp((sentence->tokens + (i + 2))->str, L"miten", 5) == 0) {
+			         wcsncmp(sentence->tokens[i + 2].str, L"miten", 5) == 0) {
 				// "kävi miten kävi" ei vaadi pilkkua. TODO: siistimpi toteutus
 				foundVerbInCurrentClause = false;
 			}

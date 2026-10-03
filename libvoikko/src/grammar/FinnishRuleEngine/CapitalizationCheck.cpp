@@ -102,7 +102,7 @@ static const Token * getTokenAndAdvance(CapitalizationContext & context) {
 		}
 	}
 	
-	const Token * token = sentence->tokens + context.currentToken;
+	const Token * token = &sentence->tokens[context.currentToken];
 	++context.currentToken;
 	if (sentence->tokenCount == context.currentToken) {
 		context.currentToken = 0;
@@ -271,6 +271,55 @@ static CapitalizationState inUpper(CapitalizationContext & context) {
 	return LOWER;
 }
 
+/**
+ * Finnish/Swedish company-form abbreviation, written with a capital initial,
+ * either bare ("Oy") or inflected after a colon ("Oy:n", "Oyj:ssä").
+ */
+static bool isCompanyForm(const Token * token) {
+	static const wchar_t * const forms[] = {L"Oy", L"Oyj", L"Ab", L"Abp", L"Ky", L"Ay", L"Tmi", 0};
+	if (token->type != TOKEN_WORD) {
+		return false;
+	}
+	for (const wchar_t * const * form = forms; *form; ++form) {
+		size_t length = wcslen(*form);
+		if (wcsncmp(token->str, *form, length) == 0 &&
+		    (token->str[length] == L'\0' || token->str[length] == L':')) {
+			return true;
+		}
+	}
+	return false;
+}
+
+/**
+ * True if word is a company-form abbreviation or a capitalized word in a
+ * space-separated run that ends with one ("Esimerkki Palvelut Oy").
+ */
+static bool isPartOfCompanyName(const CapitalizationContext & context, const Token * word) {
+	if (isCompanyForm(word)) {
+		return true;
+	}
+	for (size_t s = 0; s < context.paragraph->sentenceCount; ++s) {
+		const Sentence * sentence = context.paragraph->sentences[s];
+		const Token * first = sentence->tokens.data();
+		const Token * end = first + sentence->tokenCount;
+		if (word < first || word >= end) {
+			continue;
+		}
+		for (const Token * t = word + 1; t + 1 < end; t += 2) {
+			if (t->type != TOKEN_WHITESPACE || t->tokenlen != 1 ||
+			    (t + 1)->type != TOKEN_WORD || !SimpleChar::isUpper((t + 1)->str[0])) {
+				return false;
+			}
+			if (isCompanyForm(t + 1)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	return false;
+}
+
+
 static CapitalizationState inLower(CapitalizationContext & context) {
 	const Token * word = context.nextWord;
 	if (word->isValidWord &&
@@ -281,7 +330,8 @@ static CapitalizationState inLower(CapitalizationContext & context) {
 	    word->str[1] != L'-' && // A-rapussa etc.
 	    word->str[1] != L':' && // A:n
 	    voikko_casetype(word->str, word->tokenlen) != CT_ALL_UPPER && // KISSA
-	    !word->possibleGeographicalName) {
+	    !word->possibleGeographicalName &&
+	    !isPartOfCompanyName(context, word)) {
 		CacheEntry * e = new CacheEntry(1);
 		e->error.setErrorCode(GCERR_WRITE_FIRST_LOWERCASE);
 		e->error.setStartPos(word->pos);

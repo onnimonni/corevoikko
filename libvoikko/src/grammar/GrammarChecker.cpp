@@ -39,11 +39,9 @@ GrammarChecker::~GrammarChecker() {
 	cache.clear();
 }
 
-const VoikkoGrammarError * GrammarChecker::errorFromCache(const wchar_t * text, size_t startpos, int skiperrors) {
-	if (!cache.paragraph) {
-		return 0;
-	}
-	if (wcscmp(cache.paragraph, text) != 0) {
+const VoikkoGrammarError * GrammarChecker::errorFromCache(const wchar_t * text, size_t textlen, size_t startpos, int skiperrors) {
+	if (!cache.paragraph || cache.paragraphLength != textlen ||
+	    wmemcmp(cache.paragraph, text, textlen) != 0) {
 		return 0;
 	}
 	CacheEntry * e = cache.firstError;
@@ -67,6 +65,7 @@ void GrammarChecker::paragraphToCache(const wchar_t * text, size_t textlen) {
 	}
 	memcpy(cache.paragraph, text, textlen * sizeof(wchar_t));
 	cache.paragraph[textlen] = L'\0';
+	cache.paragraphLength = textlen;
 	Paragraph * para = paragraphAnalyser->analyseParagraph(text, textlen);
 	if (!para) {
 		return;

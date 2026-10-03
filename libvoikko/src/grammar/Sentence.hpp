@@ -30,6 +30,7 @@
 #define VOIKKO_GRAMMAR_SENTENCE
 
 #include "grammar/Token.hpp"
+#include <vector>
 
 namespace libvoikko { namespace grammar {
 
@@ -42,14 +43,11 @@ class Sentence {
 		
 		~Sentence();
 		
-		/* Maximum number of tokens in a sentence */
-		static const int MAX_TOKENS_IN_SENTENCE = 500;
-		
 		/** Type of this sentence (start type of next sentence) */
 		voikko_sentence_type type;
 		
 		/** Array of gc tokens */
-		Token tokens[MAX_TOKENS_IN_SENTENCE];
+		std::vector<Token> tokens;
 		
 		/** Number of tokens in the sentence */
 		size_t tokenCount;

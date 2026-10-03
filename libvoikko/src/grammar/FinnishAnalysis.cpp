@@ -199,7 +199,7 @@ Sentence * FinnishAnalysis::analyseSentence(const wchar_t * text, size_t textlen
 	const wchar_t * pos = text;
 	size_t remaining = textlen;
 	bool next_word_is_possible_sentence_start = false;
-	for (int i = 0; i < Sentence::MAX_TOKENS_IN_SENTENCE; i++) {
+	for (size_t i = 0; remaining; i++) {
 		enum voikko_token_type tt;
 		int ignore_dot_saved = voikkoOptions->ignore_dot;
 		voikkoOptions->ignore_dot = 0;
@@ -207,15 +207,15 @@ Sentence * FinnishAnalysis::analyseSentence(const wchar_t * text, size_t textlen
 		voikkoOptions->ignore_dot = ignore_dot_saved;
 		if (tt == TOKEN_NONE) return s;
 
+		s->tokens.emplace_back();
 		s->tokens[i].type = tt;
 		s->tokens[i].tokenlen = tokenlen;
 		wchar_t * tstr = new wchar_t[tokenlen + 1];
-		if (!tstr) break;
 		memcpy(tstr, pos, tokenlen * sizeof(wchar_t));
 		tstr[tokenlen] = L'\0';
 		s->tokens[i].str = tstr;
 		s->tokens[i].pos = sentencepos + (pos - text);
-		analyseToken(s->tokens + i);
+		analyseToken(&s->tokens[i]);
 		
 		if (next_word_is_possible_sentence_start && tt == TOKEN_WORD) {
 			s->tokens[i].possibleSentenceStart = true;
@@ -232,9 +232,7 @@ Sentence * FinnishAnalysis::analyseSentence(const wchar_t * text, size_t textlen
 		remaining -= tokenlen;
 		if (!remaining) return s;
 	}
-	// Too long sentence or error
-	delete s;
-	return 0;
+	return s;
 }
 
 
@@ -261,10 +259,10 @@ Paragraph * FinnishAnalysis::analyseParagraph(const wchar_t * text, size_t textl
 			return 0;
 		}
 		s->type = st;
-		p->sentences[p->sentenceCount++] = s;
+		p->sentences.push_back(s);
+		p->sentenceCount++;
 		pos += sentencelen;
-	} while (st != SENTENCE_NONE && st != SENTENCE_NO_START &&
-	         p->sentenceCount < Paragraph::MAX_SENTENCES_IN_PARAGRAPH);
+	} while (st != SENTENCE_NONE && st != SENTENCE_NO_START);
 	return p;
 }
 

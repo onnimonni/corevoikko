@@ -104,7 +104,7 @@ static size_t findUrlOrEmail(const wchar_t * text, size_t textlen) {
 			case CHAR_LETTER:
 				continue;
 			case CHAR_PUNCTUATION:
-				if (text[i] == L'.' && (i + 1 == textlen || get_char_type(text[i+1]) == CHAR_WHITESPACE)) {
+				if (wcschr(L".!?", text[i]) != 0 && (i + 1 == textlen || get_char_type(text[i+1]) == CHAR_WHITESPACE)) {
 					return i;
 				}
 		}

@@ -93,13 +93,13 @@ class DeprecatedApiTest(unittest.TestCase):
 		voikko.lib.voikko_set_int_option(voikko.handle, 5, 56)
 	
 	def testEncodingCanBeSet(self):
-		self.assertEquals(1, voikko.lib.voikko_set_string_option(voikko.handle, 2, "UTF-8"))
-		self.assertEquals(0, voikko.lib.voikko_set_string_option(voikko.handle, 2, "iso-8859-1"))
-		self.assertEquals(0, voikko.lib.voikko_set_string_option(voikko.handle, 1, "UTF-8"))
+		self.assertEqual(1, voikko.lib.voikko_set_string_option(voikko.handle, 2, "UTF-8"))
+		self.assertEqual(0, voikko.lib.voikko_set_string_option(voikko.handle, 2, "iso-8859-1"))
+		self.assertEqual(0, voikko.lib.voikko_set_string_option(voikko.handle, 1, "UTF-8"))
 	
 	def test_spell_cstr_works(self):
-		self.assertEquals(1, voikko.lib.voikko_spell_cstr(voikko.handle, u"kissa".encode("UTF-8")))
-		self.assertEquals(0, voikko.lib.voikko_spell_cstr(voikko.handle, u"koirra".encode("UTF-8")))
+		self.assertEqual(1, voikko.lib.voikko_spell_cstr(voikko.handle, u"kissa".encode("UTF-8")))
+		self.assertEqual(0, voikko.lib.voikko_spell_cstr(voikko.handle, u"koirra".encode("UTF-8")))
 	
 	def test_suggest_cstr_works(self):
 		cSuggestions = voikko.lib.voikko_suggest_cstr(voikko.handle, u"koirra")
@@ -114,7 +114,7 @@ class DeprecatedApiTest(unittest.TestCase):
 			i = i + 1
 		
 		voikko.lib.voikko_free_suggest_cstr(cSuggestions)
-		self.failUnless(u"koira" in pSuggestions)
+		self.assertTrue(u"koira" in pSuggestions)
 	
 	def test_hyphenate_cstr_works(self):
 		cHyphenationPattern = voikko.lib.voikko_hyphenate_cstr(voikko.handle, u"koira".encode("UTF-8"))
@@ -179,8 +179,8 @@ class DeprecatedApiTest(unittest.TestCase):
 	
 	def assertCanSpellWithHandle(self, handleValue):
 		handle = c_int(handleValue)
-		self.assertEquals(1, voikko.lib.voikko_spell_ucs4(handle, u"kissa"))
-		self.assertEquals(0, voikko.lib.voikko_spell_ucs4(handle, u"koirra"))
+		self.assertEqual(1, voikko.lib.voikko_spell_ucs4(handle, u"kissa"))
+		self.assertEqual(0, voikko.lib.voikko_spell_ucs4(handle, u"koirra"))
 	
 	def terminateHandle(self, handleValue):
 		handle = c_int(handleValue)

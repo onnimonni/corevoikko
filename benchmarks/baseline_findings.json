@@ -1,0 +1,774 @@
+{
+  "source_commit": "ad9d89ef20680cbdb572894bd3e40b84573666f2",
+  "corpus_sha256": "100d096b690953698caf259c1d106018cccd025fa3789ba04472a1aff66d6585",
+  "metadata": {
+    "library_version": "4.3.3",
+    "backend": "Finnish VFST",
+    "dictionary_variant": "standard",
+    "dictionary_sha256": {
+      "mor.vfst": "e8a7b01f1c2ba6c62c88169d8ca107c3c203c0e5d35fe8a60391709d9f588a1d",
+      "autocorr.vfst": "e06326e84b72e240d1b7047f0e6a899b5e98e8a0a3bb05aa803a66dbf7377ce1",
+      "index.txt": "f6dd83ed363fe67df60b17939117b11b5a9a98e6059abf6cc8d6b4b376b051e8"
+    },
+    "offsets": "Unicode code points, zero-based half-open",
+    "scoring": "5 * false_positives + false_negatives; unsupported checks excluded"
+  },
+  "metrics": {
+    "quality_loss": 73,
+    "false_positives": 14,
+    "false_negatives": 3,
+    "true_positives": 24,
+    "precision": 0.631578947368421,
+    "recall": 0.8888888888888888,
+    "clean_cases": 76,
+    "clean_cases_flagged": 12,
+    "unsupported_checks": 8,
+    "unsupported_detected": 0,
+    "correction_hits": 18,
+    "correction_opportunities": 21,
+    "cases": 111
+  },
+  "scope_note": "Adversarial curated fixtures, not population accuracy. Labels are local triage, not filed GitHub issues. Integration findings are not claimed as upstream engine defects.",
+  "groups": [
+    {
+      "id": "VOIKKO-001",
+      "label": "bug:coverage",
+      "priority": "P1",
+      "component": "Finnish grammar engine",
+      "title": "A sentence over 500 tokens silently discards all grammar analysis for its paragraph",
+      "runtime_reproduced": true,
+      "case_ids": [
+        "token-boundary-130",
+        "exact-token-boundary-501"
+      ],
+      "evidence": [
+        "libvoikko/src/grammar/FinnishAnalysis.cpp:202-262"
+      ],
+      "reproductions": [
+        {
+          "id": "token-boundary-130",
+          "text": "Se oli joten kuten. Talo on talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo.",
+          "profile": "prose",
+          "expected": [
+            {
+              "kind": "grammar",
+              "start": 7,
+              "end": 18,
+              "text": "joten kuten",
+              "correction": "jotenkuten",
+              "code": 1
+            }
+          ],
+          "actual": [],
+          "missed": [
+            {
+              "kind": "grammar",
+              "start": 7,
+              "end": 18,
+              "text": "joten kuten",
+              "correction": "jotenkuten",
+              "code": 1
+            }
+          ],
+          "false_positives": []
+        },
+        {
+          "id": "exact-token-boundary-501",
+          "text": "Se oli joten kuten. Talo on talo, talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo.",
+          "profile": "prose",
+          "expected": [
+            {
+              "kind": "grammar",
+              "start": 7,
+              "end": 18,
+              "text": "joten kuten",
+              "correction": "jotenkuten",
+              "code": 1
+            }
+          ],
+          "actual": [],
+          "missed": [
+            {
+              "kind": "grammar",
+              "start": 7,
+              "end": 18,
+              "text": "joten kuten",
+              "correction": "jotenkuten",
+              "code": 1
+            }
+          ],
+          "false_positives": []
+        }
+      ]
+    },
+    {
+      "id": "VOIKKO-002",
+      "label": "bug:coverage",
+      "priority": "P1",
+      "component": "Finnish grammar engine",
+      "title": "The 201st sentence is ignored and code 9 spuriously points at the truncation whitespace",
+      "runtime_reproduced": true,
+      "case_ids": [
+        "sentence-boundary-201"
+      ],
+      "evidence": [
+        "libvoikko/src/grammar/FinnishAnalysis.cpp:265-268"
+      ],
+      "reproductions": [
+        {
+          "id": "sentence-boundary-201",
+          "text": "Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Se oli joten kuten.",
+          "profile": "prose",
+          "expected": [
+            {
+              "kind": "grammar",
+              "start": 2807,
+              "end": 2818,
+              "text": "joten kuten",
+              "correction": "jotenkuten",
+              "code": 1
+            }
+          ],
+          "actual": [
+            {
+              "kind": "grammar",
+              "code": 9,
+              "start": 2799,
+              "end": 2800,
+              "text": " ",
+              "description": "Välimerkki puuttuu virkkeen lopusta.",
+              "suggestions": []
+            }
+          ],
+          "missed": [
+            {
+              "kind": "grammar",
+              "start": 2807,
+              "end": 2818,
+              "text": "joten kuten",
+              "correction": "jotenkuten",
+              "code": 1
+            }
+          ],
+          "false_positives": [
+            {
+              "kind": "grammar",
+              "code": 9,
+              "start": 2799,
+              "end": 2800,
+              "text": " ",
+              "description": "Välimerkki puuttuu virkkeen lopusta.",
+              "suggestions": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "VOIKKO-003",
+      "label": "bug:tokenization",
+      "priority": "P2",
+      "component": "Tokenizer / grammar interaction",
+      "title": "Question mark is absorbed into a terminal URL, causing a missing-terminal-punctuation false positive",
+      "runtime_reproduced": true,
+      "case_ids": [
+        "email-link-question"
+      ],
+      "evidence": [
+        "libvoikko/src/tokenizer/Tokenizer.cpp:99-125"
+      ],
+      "reproductions": [
+        {
+          "id": "email-link-question",
+          "text": "Löytyvätkö tiedot osoitteesta https://www.kela.fi/tietosuoja?",
+          "profile": "prose",
+          "expected": [],
+          "actual": [
+            {
+              "kind": "grammar",
+              "code": 9,
+              "start": 30,
+              "end": 61,
+              "text": "https://www.kela.fi/tietosuoja?",
+              "description": "Välimerkki puuttuu virkkeen lopusta.",
+              "suggestions": []
+            }
+          ],
+          "missed": [],
+          "false_positives": [
+            {
+              "kind": "grammar",
+              "code": 9,
+              "start": 30,
+              "end": 61,
+              "text": "https://www.kela.fi/tietosuoja?",
+              "description": "Välimerkki puuttuu virkkeen lopusta.",
+              "suggestions": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "VOIKKO-004",
+      "label": "bug:false-positive",
+      "priority": "P2",
+      "component": "Finnish grammar punctuation rule",
+      "title": "A complete sentence followed by an emoji triggers missing-terminal-punctuation code 9",
+      "runtime_reproduced": true,
+      "case_ids": [
+        "unicode-emoji",
+        "typo-after-emoji"
+      ],
+      "evidence": [
+        "libvoikko/src/grammar/FinnishRuleEngine/checks.cpp:250-264"
+      ],
+      "reproductions": [
+        {
+          "id": "unicode-emoji",
+          "text": "Kiitos! 😊",
+          "profile": "prose",
+          "expected": [],
+          "actual": [
+            {
+              "kind": "grammar",
+              "code": 9,
+              "start": 8,
+              "end": 9,
+              "text": "😊",
+              "description": "Välimerkki puuttuu virkkeen lopusta.",
+              "suggestions": []
+            }
+          ],
+          "missed": [],
+          "false_positives": [
+            {
+              "kind": "grammar",
+              "code": 9,
+              "start": 8,
+              "end": 9,
+              "text": "😊",
+              "description": "Välimerkki puuttuu virkkeen lopusta.",
+              "suggestions": []
+            }
+          ]
+        },
+        {
+          "id": "typo-after-emoji",
+          "text": "Kiitos! 😊\nTietoja säilytettään.",
+          "profile": "prose",
+          "expected": [
+            {
+              "kind": "spelling",
+              "start": 18,
+              "end": 30,
+              "text": "säilytettään",
+              "correction": "säilytetään"
+            }
+          ],
+          "actual": [
+            {
+              "kind": "grammar",
+              "code": 9,
+              "start": 8,
+              "end": 9,
+              "text": "😊",
+              "description": "Välimerkki puuttuu virkkeen lopusta.",
+              "suggestions": []
+            },
+            {
+              "kind": "spelling",
+              "start": 18,
+              "end": 30,
+              "text": "säilytettään",
+              "suggestions": [
+                "säilytetään",
+                "säilytettävän",
+                "säilytettämän",
+                "säilytettyään"
+              ]
+            }
+          ],
+          "missed": [],
+          "false_positives": [
+            {
+              "kind": "grammar",
+              "code": 9,
+              "start": 8,
+              "end": 9,
+              "text": "😊",
+              "description": "Välimerkki puuttuu virkkeen lopusta.",
+              "suggestions": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "VOIKKO-005",
+      "label": "integration:paragraph-context",
+      "priority": "P2",
+      "component": "Python whole-text binding / email integration",
+      "title": "LF paragraph splitting loses a comma-ended greeting and incorrectly capitalizes the following line",
+      "runtime_reproduced": true,
+      "case_ids": [
+        "greeting-comma"
+      ],
+      "evidence": [
+        "libvoikko/python/libvoikko.py:654-669",
+        "https://kielitoimistonohjepankki.fi/ohje/sahkoposti-kirje-ja-muut-viestit/"
+      ],
+      "reproductions": [
+        {
+          "id": "greeting-comma",
+          "text": "Hei,\nvoidaanko kokous aloittaa huomenna jo kello 10?",
+          "profile": "message",
+          "expected": [],
+          "actual": [
+            {
+              "kind": "grammar",
+              "code": 7,
+              "start": 5,
+              "end": 14,
+              "text": "voidaanko",
+              "description": "Sana on kirjoitettava isolla alkukirjaimella.",
+              "suggestions": [
+                "Voidaanko"
+              ]
+            }
+          ],
+          "missed": [],
+          "false_positives": [
+            {
+              "kind": "grammar",
+              "code": 7,
+              "start": 5,
+              "end": 14,
+              "text": "voidaanko",
+              "description": "Sana on kirjoitettava isolla alkukirjaimella.",
+              "suggestions": [
+                "Voidaanko"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "VOIKKO-006",
+      "label": "bug:binding",
+      "priority": "P2",
+      "component": "Python whole-text binding",
+      "title": "CRLF input leaves CR in a paragraph and falsely reports a missing terminal punctuation mark",
+      "runtime_reproduced": true,
+      "case_ids": [
+        "crlf"
+      ],
+      "evidence": [
+        "libvoikko/python/libvoikko.py:654-669"
+      ],
+      "reproductions": [
+        {
+          "id": "crlf",
+          "text": "Tietosuoja on tärkeää.\r\nTiedot poistetaan.",
+          "profile": "prose",
+          "expected": [],
+          "actual": [
+            {
+              "kind": "grammar",
+              "code": 9,
+              "start": 22,
+              "end": 23,
+              "text": "\r",
+              "description": "Välimerkki puuttuu virkkeen lopusta.",
+              "suggestions": []
+            }
+          ],
+          "missed": [],
+          "false_positives": [
+            {
+              "kind": "grammar",
+              "code": 9,
+              "start": 22,
+              "end": 23,
+              "text": "\r",
+              "description": "Välimerkki puuttuu virkkeen lopusta.",
+              "suggestions": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "VOIKKO-007",
+      "label": "coverage:dictionary",
+      "priority": "P2",
+      "component": "Standard Finnish dictionary",
+      "title": "Legitimate privacy term pseudonymisointi and verb forms are rejected; not errors in the source document",
+      "runtime_reproduced": true,
+      "case_ids": [
+        "privacy-pseudonymization",
+        "authority-pseudonymization",
+        "authority-definition"
+      ],
+      "evidence": [
+        "https://tietosuoja.fi/pseudonymisointi-anonymisointi"
+      ],
+      "reproductions": [
+        {
+          "id": "privacy-pseudonymization",
+          "text": "Tiedot pseudonymisoidaan ennen tutkimusta.",
+          "profile": "prose",
+          "expected": [],
+          "actual": [
+            {
+              "kind": "spelling",
+              "start": 7,
+              "end": 24,
+              "text": "pseudonymisoidaan",
+              "suggestions": []
+            }
+          ],
+          "missed": [],
+          "false_positives": [
+            {
+              "kind": "spelling",
+              "start": 7,
+              "end": 24,
+              "text": "pseudonymisoidaan",
+              "suggestions": []
+            }
+          ]
+        },
+        {
+          "id": "authority-pseudonymization",
+          "text": "Henkilötiedot voidaan pseudonymisoida tai anonymisoida.",
+          "profile": "prose",
+          "expected": [],
+          "actual": [
+            {
+              "kind": "spelling",
+              "start": 22,
+              "end": 37,
+              "text": "pseudonymisoida",
+              "suggestions": []
+            }
+          ],
+          "missed": [],
+          "false_positives": [
+            {
+              "kind": "spelling",
+              "start": 22,
+              "end": 37,
+              "text": "pseudonymisoida",
+              "suggestions": []
+            }
+          ]
+        },
+        {
+          "id": "authority-definition",
+          "text": "Pseudonymisointi tarkoittaa henkilötietojen käsittelemistä siten, että henkilötietoja ei voida enää yhdistää tiettyyn henkilöön ilman lisätietoja.",
+          "profile": "prose",
+          "expected": [],
+          "actual": [
+            {
+              "kind": "spelling",
+              "start": 0,
+              "end": 16,
+              "text": "Pseudonymisointi",
+              "suggestions": []
+            }
+          ],
+          "missed": [],
+          "false_positives": [
+            {
+              "kind": "spelling",
+              "start": 0,
+              "end": 16,
+              "text": "Pseudonymisointi",
+              "suggestions": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "VOIKKO-008",
+      "label": "integration:spelling-adapter",
+      "priority": "P2",
+      "component": "Harness token-to-spelling integration",
+      "title": "Default tokenizer strips the terminal dot from esim.; needs documented abbreviation handling, not an upstream grammar bug",
+      "runtime_reproduced": true,
+      "case_ids": [
+        "abbreviation"
+      ],
+      "evidence": [
+        "libvoikko/src/voikko_defines.h:55-63"
+      ],
+      "reproductions": [
+        {
+          "id": "abbreviation",
+          "text": "Voit lähettää esim. sähköpostia.",
+          "profile": "prose",
+          "expected": [],
+          "actual": [
+            {
+              "kind": "spelling",
+              "start": 14,
+              "end": 18,
+              "text": "esim",
+              "suggestions": [
+                "esim."
+              ]
+            }
+          ],
+          "missed": [],
+          "false_positives": [
+            {
+              "kind": "spelling",
+              "start": 14,
+              "end": 18,
+              "text": "esim",
+              "suggestions": [
+                "esim."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "VOIKKO-009",
+      "label": "integration:spelling-adapter",
+      "priority": "P2",
+      "component": "Harness token-to-spelling integration",
+      "title": "Token spelling rejects valid Finnish times/dates; distinguish numeric typography from lexical words",
+      "runtime_reproduced": true,
+      "case_ids": [
+        "colon-time",
+        "date-without-year",
+        "sentence-after-time"
+      ],
+      "evidence": [
+        "libvoikko/src/tokenizer/Tokenizer.cpp:186-208",
+        "tests/voikkotest/fi-x-vfst/grammar.txt:80"
+      ],
+      "reproductions": [
+        {
+          "id": "colon-time",
+          "text": "Kokous alkaa klo 14.30.",
+          "profile": "prose",
+          "expected": [],
+          "actual": [
+            {
+              "kind": "spelling",
+              "start": 17,
+              "end": 22,
+              "text": "14.30",
+              "suggestions": [
+                "14,30",
+                "1430",
+                "1403.",
+                "1.4.30",
+                "14.3.0"
+              ]
+            }
+          ],
+          "missed": [],
+          "false_positives": [
+            {
+              "kind": "spelling",
+              "start": 17,
+              "end": 22,
+              "text": "14.30",
+              "suggestions": [
+                "14,30",
+                "1430",
+                "1403.",
+                "1.4.30",
+                "14.3.0"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "date-without-year",
+          "text": "Myös 20.3. satoi lunta.",
+          "profile": "prose",
+          "expected": [],
+          "actual": [
+            {
+              "kind": "spelling",
+              "start": 5,
+              "end": 9,
+              "text": "20.3",
+              "suggestions": [
+                "20,3",
+                "203",
+                "20.",
+                "203.",
+                "2.0.3"
+              ]
+            }
+          ],
+          "missed": [],
+          "false_positives": [
+            {
+              "kind": "spelling",
+              "start": 5,
+              "end": 9,
+              "text": "20.3",
+              "suggestions": [
+                "20,3",
+                "203",
+                "20.",
+                "203.",
+                "2.0.3"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "sentence-after-time",
+          "text": "Kokous alkaa klo 14.30. Tiedot poistetaan.",
+          "profile": "prose",
+          "expected": [],
+          "actual": [
+            {
+              "kind": "spelling",
+              "start": 17,
+              "end": 22,
+              "text": "14.30",
+              "suggestions": [
+                "14,30",
+                "1430",
+                "1403.",
+                "1.4.30",
+                "14.3.0"
+              ]
+            }
+          ],
+          "missed": [],
+          "false_positives": [
+            {
+              "kind": "spelling",
+              "start": 17,
+              "end": 22,
+              "text": "14.30",
+              "suggestions": [
+                "14,30",
+                "1430",
+                "1403.",
+                "1.4.30",
+                "14.3.0"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "VOIKKO-010",
+      "label": "limitation:message-format",
+      "priority": "P3",
+      "component": "Message grammar profile",
+      "title": "An ASCII smiley after a complete message triggers invalid-sentence-start code 5; informal message syntax is not comprehensively supported",
+      "runtime_reproduced": true,
+      "case_ids": [
+        "message-emoticon"
+      ],
+      "evidence": [
+        "libvoikko/src/grammar/FinnishRuleEngine/checks.cpp"
+      ],
+      "reproductions": [
+        {
+          "id": "message-emoticon",
+          "text": "Kiitos! :)",
+          "profile": "message",
+          "expected": [],
+          "actual": [
+            {
+              "kind": "grammar",
+              "code": 5,
+              "start": 7,
+              "end": 9,
+              "text": " :",
+              "description": "Virheellinen virkkeen aloittava merkki",
+              "suggestions": []
+            }
+          ],
+          "missed": [],
+          "false_positives": [
+            {
+              "kind": "grammar",
+              "code": 5,
+              "start": 7,
+              "end": 9,
+              "text": " :",
+              "description": "Virheellinen virkkeen aloittava merkki",
+              "suggestions": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "unsupported": [
+    {
+      "id": "subject-verb-agreement",
+      "category": "agreement",
+      "text": "Me käsittelee tietoja.",
+      "rationale": "Plural subject me requires käsittelemme, not käsittelee.",
+      "actual": []
+    },
+    {
+      "id": "adjective-agreement",
+      "category": "agreement",
+      "text": "Tämä tiedot poistetaan.",
+      "rationale": "Singular tämä with plural tiedot; use nämä tiedot.",
+      "actual": []
+    },
+    {
+      "id": "case-government",
+      "category": "government",
+      "text": "Pidän tämä palvelu.",
+      "rationale": "Pitää in the sense of liking requires elative: tästä palvelusta.",
+      "actual": []
+    },
+    {
+      "id": "object-case",
+      "category": "object-case",
+      "text": "Luin asiakirja eilen.",
+      "rationale": "Completed singular object requires asiakirjan.",
+      "actual": []
+    },
+    {
+      "id": "semantic-contradiction",
+      "category": "semantic",
+      "text": "Emme kerää henkilötietoja. Keräämme henkilötietoja.",
+      "rationale": "Contradictory assertions require document semantics, not spelling.",
+      "actual": []
+    },
+    {
+      "id": "signature-comma",
+      "category": "correspondence-format",
+      "text": "Terveisin,\nElias Laine",
+      "rationale": "Finnish signature closing has no comma; message guide convention.",
+      "actual": []
+    },
+    {
+      "id": "embedded-nul",
+      "category": "input-coverage",
+      "text": "Talo on talo.\u0000Se oli joten kuten.",
+      "rationale": "Python grammar API rejects embedded NUL and returns no findings; unsupported input, not a clean verdict.",
+      "actual": []
+    },
+    {
+      "id": "relative-pronoun",
+      "category": "relative-pronoun",
+      "text": "Talo, kuka on suuri, näkyy.",
+      "rationale": "A building is referred to with joka, not kuka. RelativePronounCheck is an empty registered method in this Finnish engine.",
+      "actual": []
+    }
+  ]
+}

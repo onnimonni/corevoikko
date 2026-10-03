@@ -923,4 +923,9 @@
   <!-- "Lennän ylös päin pilviä ..." -->
   <!-- Oikeammin: "Lennän ylös, päin pilviä ..." -->
 </replacement>
+<replacement>
+  <incorrect>ystävälisin</incorrect>
+  <correct>ystävällisin</correct>
+  <!-- Kirjeen lopetus; "ystävä+lisin" on muoto-opillisesti mahdollinen mutta virheellinen. -->
+</replacement>
 </autocorrect>

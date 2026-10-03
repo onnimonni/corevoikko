@@ -35,18 +35,21 @@ namespace libvoikko { namespace grammar { namespace check {
 
 void SidesanaCheck::check(VoikkoHandle * options, const Sentence * sentence) {
 	size_t tokenCount = sentence->tokenCount;
-	if ((sentence->tokens + (tokenCount - 1))->type == TOKEN_WHITESPACE) {
+	if (tokenCount == 0) {
+		return;
+	}
+	if (sentence->tokens[tokenCount - 1].type == TOKEN_WHITESPACE) {
 		--tokenCount;
 	}
 	if (tokenCount >= 2 &&
-	    ((sentence->tokens + (tokenCount - 2))->isConjunction) &&
-	    (wcscmp((sentence->tokens + (tokenCount - 2))->str, L"vaan") != 0) && // "mitä vaan" ~ "mitä vain"
-	    ((sentence->tokens + (tokenCount - 1))->type == TOKEN_PUNCTUATION) &&
-	    (wcscmp((sentence->tokens + (tokenCount - 1))->str, L".") == 0)) {
+	    sentence->tokens[tokenCount - 2].isConjunction &&
+	    (wcscmp(sentence->tokens[tokenCount - 2].str, L"vaan") != 0) && // "mitä vaan" ~ "mitä vain"
+	    sentence->tokens[tokenCount - 1].type == TOKEN_PUNCTUATION &&
+	    (wcscmp(sentence->tokens[tokenCount - 1].str, L".") == 0)) {
 		CacheEntry * e = new CacheEntry(0);
 		e->error.setErrorCode(GCERR_MISPLACED_SIDESANA);
-		e->error.setStartPos((sentence->tokens + (tokenCount - 2))->pos);
-		e->error.setErrorLen((sentence->tokens + (tokenCount - 2))->tokenlen);
+		e->error.setStartPos(sentence->tokens[tokenCount - 2].pos);
+		e->error.setErrorLen(sentence->tokens[tokenCount - 2].tokenlen);
 		options->grammarChecker->cache.appendError(e);
 	}
 }

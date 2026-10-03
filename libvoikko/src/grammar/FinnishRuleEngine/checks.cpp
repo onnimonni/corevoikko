@@ -46,6 +46,7 @@ void gc_local_punctuation(VoikkoHandle * options, const Sentence * sentence) {
 	CacheEntry * e;
 	for (size_t i = 0; i < sentence->tokenCount; i++) {
 		Token t = sentence->tokens[i];
+		bool checkStarter;
 		switch (t.type) {
 		case TOKEN_WHITESPACE:
 			if (t.tokenlen > 1) {
@@ -79,7 +80,17 @@ void gc_local_punctuation(VoikkoHandle * options, const Sentence * sentence) {
 					continue;
 				}
 			}
-			if (i == 0) {
+			checkStarter = i == 0;
+			if (checkStarter && options->accept_unfinished_paragraphs_in_gc) {
+				checkStarter = false;
+				for (const Token & candidate : sentence->tokens) {
+					if (candidate.type == TOKEN_WORD) {
+						checkStarter = true;
+						break;
+					}
+				}
+			}
+			if (checkStarter) {
 				if (wcschr(L"()'-\u201C\u2013\u2014", t.str[0]) || isFinnishQuotationMark(t.str[0])) {
 					continue;
 				}
@@ -118,7 +129,7 @@ void gc_local_punctuation(VoikkoHandle * options, const Sentence * sentence) {
 }
 
 void gc_punctuation_of_quotations(VoikkoHandle * options, const Sentence * sentence) {
-	for (size_t i = 0; i + 2 < sentence->tokenCount; i++) {
+	for (size_t i = 0; i < sentence->tokenCount; i++) {
 		if (sentence->tokens[i].type != TOKEN_PUNCTUATION) {
 			continue;
 		}
@@ -133,7 +144,8 @@ void gc_punctuation_of_quotations(VoikkoHandle * options, const Sentence * sente
 			options->grammarChecker->cache.appendError(e);
 			return;
 		}
-		if (sentence->tokens[i + 1].type != TOKEN_PUNCTUATION) {
+		if (i + 2 >= sentence->tokenCount ||
+		    sentence->tokens[i + 1].type != TOKEN_PUNCTUATION) {
 			continue;
 		}
 		if (!isFinnishQuotationMark(sentence->tokens[i + 1].str[0])) {
@@ -227,9 +239,18 @@ void gc_end_punctuation(VoikkoHandle * options, const Paragraph * paragraph) {
 	if (options->accept_unfinished_paragraphs_in_gc) return;
 	if (options->accept_bulleted_lists_in_gc) return;
 	
-	Sentence * sentence = paragraph->sentences[paragraph->sentenceCount - 1];
-	Token * token = sentence->tokens + (sentence->tokenCount - 1);
-	if (token->type == TOKEN_PUNCTUATION) return;
+	const Token * token = 0;
+	for (size_t i = paragraph->sentenceCount; i > 0 && !token; --i) {
+		const Sentence * sentence = paragraph->sentences[i - 1];
+		for (size_t j = sentence->tokenCount; j > 0; --j) {
+			const Token * candidate = &sentence->tokens[j - 1];
+			if (candidate->type == TOKEN_WORD || candidate->type == TOKEN_PUNCTUATION) {
+				token = candidate;
+				break;
+			}
+		}
+	}
+	if (!token || token->type == TOKEN_PUNCTUATION) return;
 	CacheEntry * e = new CacheEntry(0);
 	e->error.legacyError.error_code = GCERR_TERMINATING_PUNCTUATION_MISSING;
 	e->error.legacyError.startpos = token->pos;

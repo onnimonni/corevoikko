@@ -30,14 +30,13 @@
 
 namespace libvoikko { namespace grammar {
 
-Paragraph::Paragraph() : sentences(new Sentence*[MAX_SENTENCES_IN_PARAGRAPH]), sentenceCount(0) {
+Paragraph::Paragraph() : sentenceCount(0) {
 }
 
 Paragraph::~Paragraph() {
 	for (size_t i = 0; i < sentenceCount; i++) {
 		delete this->sentences[i];
 	}
-	delete[] this->sentences;
 }
 
 

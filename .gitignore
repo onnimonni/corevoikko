@@ -8,3 +8,17 @@ libvoikko/cs/libvoikko/bin
 libvoikko/cs/test-results
 voikko-fi/build-v5
 
+
+# Devenv
+.devenv*
+devenv.local.nix
+devenv.local.yaml
+
+# direnv
+.direnv
+
+# pre-commit
+.pre-commit-config.yaml
+
+# Local accuracy benchmark build and reports
+.bench-build/

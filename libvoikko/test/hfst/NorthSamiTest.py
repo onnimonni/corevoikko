@@ -29,19 +29,19 @@ class NorthSamiTest(unittest.TestCase):
 		self.voikko.terminate()
 	
 	def testUnknowWordIsRejected(self):
-		self.failIf(self.voikko.spell(u"skjdfhksdfgh"))
+		self.assertFalse(self.voikko.spell(u"skjdfhksdfgh"))
 	
 	def testValidWordIsRejected(self):
-		self.failUnless(self.voikko.spell(u"gabba"))
+		self.assertTrue(self.voikko.spell(u"gabba"))
 	
 	def testProperNounIsAccepted(self):
-		self.failUnless(self.voikko.spell(u"Matti"))
+		self.assertTrue(self.voikko.spell(u"Matti"))
 	
 	def testProperNounInLowerCaseIsRejected(self):
-		self.failIf(self.voikko.spell(u"matti"))
+		self.assertFalse(self.voikko.spell(u"matti"))
 	
 	def testSuggestionsAreReturned(self):
-		self.failUnless(u"lameallas" in self.voikko.suggest(u"lameallaa"))
+		self.assertTrue(u"lameallas" in self.voikko.suggest(u"lameallaa"))
 
 
 if __name__ == "__main__":

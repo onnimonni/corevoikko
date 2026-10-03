@@ -35,11 +35,11 @@ namespace libvoikko { namespace grammar { namespace check {
 
 void NegativeVerbCheck::check(VoikkoHandle * options, const Sentence * sentence) {
 	for (size_t i = 0; i + 2 < sentence->tokenCount; i++) {
-		const Token * token = sentence->tokens + i;
+		const Token * token = &sentence->tokens[i];
 		if (token->type == TOKEN_WORD &&
-		    (sentence->tokens + i + 1)->type == TOKEN_WHITESPACE &&
-		    (sentence->tokens + i + 2)->type == TOKEN_WORD) {
-			const Token * word2 = sentence->tokens + i + 2;
+		    sentence->tokens[i + 1].type == TOKEN_WHITESPACE &&
+		    sentence->tokens[i + 2].type == TOKEN_WORD) {
+			const Token * word2 = &sentence->tokens[i + 2];
 			if (token->isVerbNegative && word2->isPositiveVerb) {
 				CacheEntry * e = new CacheEntry(0);
 				e->error.setErrorCode(GCERR_NEGATIVE_VERB_MISMATCH);

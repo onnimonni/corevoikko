@@ -33,12 +33,14 @@ namespace libvoikko { namespace grammar {
 
 GcCache::GcCache() :
 	paragraph(0),
+	paragraphLength(0),
 	firstError(0) {
 }
 
 void GcCache::clear() {
 	delete[] paragraph;
 	paragraph = 0;
+	paragraphLength = 0;
 	CacheEntry * entry = firstError;
 	while (entry) {
 		CacheEntry * next = entry->nextError;

@@ -106,12 +106,12 @@ class Utf8ApiTest(unittest.TestCase):
 		lib.voikkoTerminate(handle)
 	
 	def testSpellingWorksWithCapitalScandinavianLetters(self):
-		self.failIf(spellCstr(u"Ääiti"))
-		self.failUnless(spellCstr(u"Äiti"))
+		self.assertFalse(spellCstr(u"Ääiti"))
+		self.assertTrue(spellCstr(u"Äiti"))
 	
 	def testSpellingWorksWithSmallScandinavianLetters(self):
-		self.failIf(spellCstr(u"ääiti"))
-		self.failUnless(spellCstr(u"äiti"))
+		self.assertFalse(spellCstr(u"ääiti"))
+		self.assertTrue(spellCstr(u"äiti"))
 	
 	def testSuggestCstrWorks(self):
 		cSuggestions = lib.voikkoSuggestCstr(handle, u"koirra")
@@ -126,7 +126,7 @@ class Utf8ApiTest(unittest.TestCase):
 			i = i + 1
 		
 		lib.voikkoFreeCstrArray(cSuggestions)
-		self.failUnless(u"koira" in pSuggestions)
+		self.assertTrue(u"koira" in pSuggestions)
 	
 	def testHyphenateCstrWorks(self):
 		cHyphenationPattern = lib.voikkoHyphenateCstr(handle, u"koira".encode("UTF-8"))

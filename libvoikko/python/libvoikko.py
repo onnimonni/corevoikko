@@ -664,7 +664,8 @@ class Voikko(object):
         errorList = []
         offset = 0
         for paragraph in textUnicode.split("\n"):
-            errorList = errorList + self.__grammarParagraph(paragraph, offset, language)
+            paragraphText = paragraph[:-1] if paragraph.endswith("\r") else paragraph
+            errorList.extend(self.__grammarParagraph(paragraphText, offset, language))
             offset = offset + len(paragraph) + 1
         return errorList
 
@@ -873,6 +874,8 @@ class Voikko(object):
     def setAcceptUnfinishedParagraphsInGc(self, value):
         """(Grammar checking only): Accept incomplete sentences at the end of the
         paragraph. These may exist when text is still being written.
+        Wordless symbolic fragments do not trigger invalid-sentence-start warnings;
+        other punctuation checks remain enabled.
         Default: false
         """
         self.setBooleanOption(14, value)

@@ -30,6 +30,7 @@
 #define VOIKKO_GRAMMAR_PARAGRAPH
 
 #include "grammar/Sentence.hpp"
+#include <vector>
 
 namespace libvoikko { namespace grammar {
 
@@ -44,11 +45,8 @@ class Paragraph {
 		
 		~Paragraph();
 		
-		/* Maximum number of sentences in a paragraph */
-		static const size_t MAX_SENTENCES_IN_PARAGRAPH = 200;
-		
 		/** Pointers to analyzed sentences */
-		Sentence ** sentences;
+		std::vector<Sentence *> sentences;
 		
 		/** Number of sentences in the paragraph */
 		size_t sentenceCount;

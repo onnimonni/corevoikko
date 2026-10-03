@@ -19,6 +19,20 @@
 ! 02110-1301, USA.
 
 LEXICON Poikkeavat_a
+! GDPR: EU:n yleinen tietosuoja-asetus. Local addition; joukahainen.xml is a refreshed export.
+[La][Xr]jjjj[X][Xp]GDPR[X]gdpr:gdpr	Lyhenne_ä	;
+! ETA: Euroopan talousalue (read as "eta"; ETA:n, ETA:ssa, ETA-maissa).
+[La][Xr]jjj[X][Xp]ETA[X]eta:eta	Lyhenne_a	;
+! PL: postilokero (Kielitoimiston ohjepankki, lyhenneluettelo P); used uninflected in addresses ("PL 450").
+[La][Xr]jj[X][Xp]PL[X]pl:pl	LyhenneIlmanTaivutusta_aä	;
+! terv. (terveisin) and P.S. (post scriptum): Kielitoimiston ohjepankki, "Sähköposti, kirje ja muut viestit".
+[La][Xp]terv.[X]terv.:terv.	PisteellisenLyhenteenJatko_ä	;
+[La][Xr]jqj[X][Xp]P.S.[X]p.s.:p.s.	PisteellisenLyhenteenJatko_ä	;
+! IP: Internet Protocol (Kielitoimiston ohjepankki, lyhenneluettelo I), read "ii-pee": IP:n, IP:tä, IP-osoite.
+[La][Xr]jj[X][Xp]IP[X]ip:ip	Lyhenne_ä	;
+! PDF ~ pdf: Portable Document Format (Kielitoimiston ohjepankki, lyhenneluettelo P), read "pee-dee-äf".
+[La][Xr]jjj[X][Xp]PDF[X]pdf:pdf	Lyhenne_ä	;
+[La][Xp]pdf[X]pdf:pdf	Lyhenne_ä	;
 [La][Xp]h[X]h%:eissa:h%:eissa	Liitesana_a	;
 [La][Xp]h[X]h%:eineen:h%:eineen	Liitesana_a	;
 [La][Xp]h[X]h%:eina:h%:eina	Liitesana_a	;
@@ -2158,7 +2172,15 @@ LEXICON Summayhdyssanat
 [Ln][Xp]jääkaappi-pakastin[X]jääkaappi-[Bm]pakasti:jääkaappi-pakasti	NimisanaUistin_a	;
 [Ln][Xp]laulaja-kitaristi[X]laulaja-[Bm]kitarist:laulaja-kitarist	NimisanaRisti_a	;
 
+LEXICON Poikkeavat_p
+! toisio- (secondary): counterpart of ensiö-, same compounding; toisiokäyttö, toisiolaki.
+[Lp]toisio:toisio	EtuliitteenJatko_elleln;
+
 LEXICON Poikkeavat_em
+! Kela: Kansaneläkelaitos (Finland's social insurance institution); not only the common noun "kela" (reel).
+[Lem][Xp]Kela[X]kel:kel	NimiKala_a	;
+! Verohallinto: official name of the Finnish Tax Administration (Kielitoimiston ohjepankki, Valtionhallinnon nimet).
+[Lem][Xp]Vero=hallinto[X]vero[Bm]hallin:verohallin	NimiAnto_a	;
 [Lem][Xp]Xinhua[X]xinhu:xinhu	NimiPeruna_a	;
 
 LEXICON Poikkeavat_ep
@@ -2418,6 +2440,8 @@ LEXICON Poikkeavat_t
 [Lt][Xp]nähdä[X]nähte[Tn2]:nähte	Omistusliite_ä	;
 [Lt][Xp]olla[X]o:o       Olla ;
 [Lt][Xp]potea[X]po:po       Potea ;
+! Privacy terminology: https://tietosuoja.fi/pseudonymisointi-anonymisointi
+[Lt][Xp]pseudonymisoida[X]pseudonymiso:pseudonymiso Kanavoida_a ;
 [Lt][Xp]saada[X]saas:saas	Loppu	;
 [Lt][Xp]seistä[X]seis:seis	Seistä	;
 [Lt][Xp]tietää[X]tiete[Tn2]:tiete	Omistusliite_ä	;
