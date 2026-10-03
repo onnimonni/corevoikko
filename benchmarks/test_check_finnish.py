@@ -138,18 +138,34 @@ class TextCheckerTest(unittest.TestCase):
         clean = ("Tiedot ovat Storian palvelimella. Storia ylläpitää palvelua.",  # repeated unknown name
                  "Katso Kanta-palvelujen tietosuojaseloste.",                 # name + Finnish word
                  "Lisätietoja: www.tietosuoja.fi/fi/index/yhteystiedot.html",  # web address path
-                 "Tiedot saadaan Digi- ja väestötietovirastolta ja Verohallinnolta.")
+                 "Tiedot saadaan Digi- ja väestötietovirastolta ja Verohallinnolta.",
+                 # Genitive name before a name compound is not a multiword name.
+                 "Tiedot ovat Kelan Kela-kortissa.",
+                 "Tiedot näkyvät Kelan Kanta-palvelussa.")
         for text in clean:
             self.assertEqual([], [(e["kind"], e["text"]) for e in diagnostics(self.checker, text)
                                   if not (e["kind"] == "grammar" and e.get("code") == 9)], text)
         flagged = (("Sinlla on oikeus. Sinlla on myös velvollisuus.", ["Sinlla", "Sinlla"]),   # repeated typo
                    ("Tiedot ovat Storian palvelimella. Storia-palveussa ne säilyvät.", ["Storia-palveussa"]),
                    ("Lue Poito-oikeus tarkasti.", ["Poito-oikeus"]),               # typo, not a name
-                   ("Sivustomme käyttää Google Analytics-palvelua.", ["Analytics-palvelua"]))
+                   ("Sivustomme käyttää Google Analytics-palvelua.", ["Analytics-palvelua"]),
+                   ("Käytämme Microsoft Teams-sovellusta.", ["Teams-sovellusta"]),
+                   # Established compounds wrongly split at a hyphen are not names.
+                   ("Mukana ovat Henkilö-tiedot.", ["Henkilö-tiedot"]),
+                   ("Lue Tieto-suoja ohje.", ["Tieto-suoja"]))
         for text, words in flagged:
             self.assertEqual(words, [e["text"] for e in diagnostics(self.checker, text)], text)
-        errors = diagnostics(self.checker, "Sivustomme käyttää Google Analytics-palvelua.")
-        self.assertEqual(["Analytics -palvelua"], errors[0]["suggestions"])
+        for text, fix in (("Sivustomme käyttää Google Analytics-palvelua.", "Analytics -palvelua"),
+                          ("Käytämme Microsoft Teams-sovellusta.", "Teams -sovellusta")):
+            errors = diagnostics(self.checker, text)
+            self.assertEqual([(1, [fix])], [(e.get("code"), e["suggestions"]) for e in errors], text)
+
+    @unittest.expectedFailure
+    def testBothLinkingFormsListedOnlyOnce(self):
+        # Known VOIKKO-027 false alarm: Kotus lists mieskuva only, but
+        # miehenkuva is also valid (upstream spell.txt).
+        configure(self.checker, "prose")
+        self.assertEqual([], diagnostics(self.checker, "Taulussa on miehenkuva."))
 
 
 if __name__ == "__main__":

@@ -260,7 +260,8 @@ legitimate plain-text policies (`limitation:false-negative`):
   `rintamitta`) and 1 derives from a valid word (`vierasvoittoisesti`). False
   alarms: 0 of 94,213 Kotus headwords, 0 of 5,656
   Joukahainen compounds, 0 of 1,177 real-policy words, 1 of 2,776 upstream
-  spell.txt words (`miehenkuva`: both linkings valid, only `mieskuva` listed).
+  spell.txt words (`miehenkuva`: both linkings valid, only `mieskuva` listed;
+  pinned as an expected-failure test).
   The derived index `benchmarks/data/established_compounds.json.gz` (253 KB)
   is committed; rebuild with
   `python benchmarks/build_compound_index.py --kotus nykysuomensanalista2024.csv`.

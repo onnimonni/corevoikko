@@ -82,6 +82,13 @@ class NameFilterCheckerTest(unittest.TestCase):
         self.assertEqual([("grammar", "Analytics-palvelua")],
                          self.found("Sivustomme käyttää Google Analytics-palvelua."))
 
+    def testWordOfMultiwordNameDoesNotHideTypo(self):
+        # "Sinlla" is one keystroke from "Sinulla": a word occurring only inside
+        # a known multiword name must not excuse it, a full name does.
+        self.checker._names = NameFilter.build(["Acme Sinlla Oy", "Paytrail"], {})
+        self.assertEqual([("spelling", "Sinlla")], self.found("Sinlla on oikeus."))
+        self.assertEqual([], self.found("Paytrailin maksupalvelu on turvallinen."))
+
     def testIncompleteRegisterNeverCallsCompanyUnknown(self):
         self.checker._names = NameFilter.build(["Storia Oy"], {"prh_complete": False, "prh_register_date": "2025-06-03"})
         found = self.found("Rekisterinpitäjänä toimii CONCOCONNENTE Oy.")
