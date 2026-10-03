@@ -95,6 +95,16 @@ class TextCheckerTest(unittest.TestCase):
         self.assertEqual([True, True, False, False],
                          [self.checker.spell(w) for w in ("terv.", "P.S.", "terw.", "p.s.")])
 
+    def testCommaAfterClosingFormulaIsReported(self):
+        for text in ("Terveisin,\nElias Laine", "Ystävällisin terveisin,\r\nElias Laine"):
+            comma = text.index(",")
+            self.assertEqual([("grammar", 4, comma, comma + 1)],
+                             [(e["kind"], e.get("code"), e["start"], e["end"]) for e in diagnostics(self.checker, text)])
+        # Correct closings, a greeting comma and a formula inside a sentence stay clean.
+        for text in ("Terveisin\nElias Laine", "Hei,\nvoidaanko kokous aloittaa?",
+                     "Lähetän kunnioittavasti, mutta päättäväisesti tämän viestin."):
+            self.assertEqual([], diagnostics(self.checker, text), text)
+
 
 if __name__ == "__main__":
     unittest.main()

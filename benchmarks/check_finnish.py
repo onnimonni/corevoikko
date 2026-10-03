@@ -72,6 +72,33 @@ def apply_document_names(checker, document):
                 and _base_forms(checker, d["text"], cache) & candidates)])
             for text, diags in document]
 
+# Closing formulas listed in Kielitoimiston ohjepankki, "Sähköposti, kirje ja
+# muut viestit": "Lopputervehdyksen jäljessä ei käytetä pilkkua".
+CLOSING_FORMULAS = {
+    "terveisin", "ystävällisin terveisin", "yhteistyöterveisin", "lämpimin terveisin",
+    "parhain terveisin", "ystävällisesti", "kunnioittavasti", "kunnioittaen", "kiitoksin",
+    "monin kiitoksin", "kiittäen", "aurinkoisen kesän toivotuksin",
+    "hyvää viikonloppua toivottaen", "lämpimästi", "rakkaudella", "terv.",
+}
+
+
+def _closing_comma_diagnostics(text):
+    """Comma after a closing formula on its own line, followed by a name line."""
+    result = []
+    lines = text.split("\n")
+    offset = 0
+    for index, raw in enumerate(lines):
+        stripped = raw.rstrip("\r").rstrip()
+        following = next((l for l in lines[index + 1:] if l.strip()), None)
+        if (stripped.endswith(",") and stripped[:-1].strip().casefold() in CLOSING_FORMULAS
+                and following is not None):
+            start = offset + len(stripped) - 1
+            result.append({"kind": "grammar", "code": 4, "start": start, "end": start + 1,
+                           "text": ",", "description": "Lopputervehdyksen jäljessä ei käytetä pilkkua.",
+                           "suggestions": [""]})
+        offset += len(raw) + 1
+    return result
+
 
 def diagnostics(checker, text, document_names=True):
     result = []
@@ -124,6 +151,8 @@ def diagnostics(checker, text, document_names=True):
                        "end": end, "text": text[start:end],
                        "description": error.shortDescription,
                        "suggestions": list(error.suggestions)})
+    if getattr(checker, "_finnish_text_profile", None) == "message":
+        result.extend(_closing_comma_diagnostics(text))
     result = sorted(result, key=lambda d: (d["start"], d["end"], d["kind"]))
     if document_names:
         result = apply_document_names(checker, [(text, result)])[0][1]

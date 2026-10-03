@@ -78,7 +78,8 @@ automatic edits or proof of incorrect Finnish.
 
 Unsupported in this selected Finnish rule engine: general subject–verb and
 adjective agreement, nominal case government, object case, relative-pronoun
-selection, document semantics, and correspondence closing conventions.
+selection and document semantics. Correspondence closings are covered only for
+the comma after a closing formula (VOIKKO-023).
 Embedded NUL is unsupported grammar input and can silently return no findings.
 Adjacent verb A/MA-infinitive government **is** implemented and scored. No
 spelling/grammar result establishes privacy-law compliance or factual accuracy.
@@ -219,9 +220,17 @@ legitimate plain-text policies (`limitation:false-negative`):
 - VOIKKO-022 (`coverage:dictionary`): `terv.` (terveisin) and `P.S.` (post
   scriptum), both endorsed by the Kotus correspondence guide, added; `Terv.
   Elias Laine` and `P.S. Muista kokous.` no longer produce spelling errors.
+- VOIKKO-023 (`integration:message-format`, adapter check): in the `message`
+  profile, a comma after a closing formula on its own line followed by a name
+  line is reported as code 4 ("remove extra comma"), per Kotus:
+  "Lopputervehdyksen jäljessä ei käytetä pilkkua". Only the guide's formulas
+  are matched (`Terveisin`, `Ystävällisin terveisin`, `Kunnioittavasti`, …);
+  `Hei,` and formula words inside a sentence are untouched. This moves the
+  corpus's `signature-comma` case from unsupported to detected (1/8).
 
 Current frozen-corpus result: **0 false positives**, **0 missed supported
-errors**, **27 detections**, **21/21 corrections**, **8 unsupported checks**.
+errors**, **27 detections**, **21/21 corrections**; 1 of the 8 unsupported
+checks (signature comma) is now detected and the other 7 remain unsupported.
 Passing this curated workload does not establish correctness on arbitrary text.
 
 Native regressions, after the benchmark build (adapter behavior plus upstream
