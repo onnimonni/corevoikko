@@ -98,13 +98,14 @@ legitimate plain-text policies (`limitation:false-negative`):
   *lisin* (`limitation:compound-overgeneration`). Individual frequent cases go
   to the autocorrect list (see VOIKKO-016).
 - Suggestion ranking (`limitation:suggestion-ranking`): `tietosuja` never
-  suggests `tietosuoja`. Candidates are ranked `priority × (discovery index + 5)`
-  and only the top 5 are returned, so a word found by a late generator (e.g.
-  inserting `o`) cannot outrank five earlier ones. Tested and ruled out as
-  levers: insertion alphabet order, doubling the cost budget (800→1600) and
-  doubling the candidate cap (15→30) — none changed recovery on 1,375
-  single-deletion typos (top-1 47.6%, any rank 93.0%). A fix needs a ranking
-  redesign validated on a larger suggestion gold set than upstream's 68 lines.
+  suggests `tietosuoja`, although it is generated (rank 6 of 15 collected).
+  Candidates are ranked `priority × (discovery index + 5)` and only the top 5
+  are returned, so late-generator finds (e.g. inserting `o`) lose to earlier
+  ones. On 1,375 single-deletion typos from corpus words: top-1 47.6%, top-5
+  93.0%; of the 96 misses, 81 are collected but ranked 6–15 and only 15 are
+  never generated. Insertion order, doubling the cost budget and doubling the
+  candidate cap changed nothing. A fix needs a ranking redesign validated on
+  a larger suggestion gold set than upstream's 68 lines.
 
 ### Retained fixes
 
@@ -166,7 +167,8 @@ errors**, **27 detections**, **21/21 corrections**, **8 unsupported checks**.
 Passing this curated workload does not establish correctness on arbitrary text.
 
 Native regressions, after the benchmark build (adapter behavior plus upstream
-`tests/voikkotest/fi-x-vfst` grammar 181, tokenizer 33 and sentence 19 cases):
+`tests/voikkotest/fi-x-vfst` grammar 181, tokenizer 33, sentence 19, spelling
+3,700+ and suggestion 68 cases):
 `devenv --offline shell -- uv run --offline --no-project python -m unittest -v benchmarks.test_check_finnish benchmarks.test_upstream_suites`
 
 `libvoikko/test` used `failIf`/`failUnless`/`assertEquals`, removed in Python
