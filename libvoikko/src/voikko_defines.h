@@ -118,6 +118,8 @@
 
 /* (Grammar checking only): Accept incomplete sentences at the end of the
  * paragraph. These may exist when text is still being written.
+ * Wordless symbolic fragments do not trigger invalid-sentence-start warnings;
+ * other punctuation checks remain enabled.
  * Default: false */
 #define VOIKKO_OPT_ACCEPT_UNFINISHED_PARAGRAPHS_IN_GC 14
 

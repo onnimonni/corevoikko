@@ -105,6 +105,13 @@ spelling/grammar result establishes privacy-law compliance or factual accuracy.
 - VOIKKO-005: the message profile retains comma-ended line continuations and
   maps normalized CRLF grammar spans back to original code-point positions.
   Exclamation-ended greetings still require correct sentence capitalization.
+- VOIKKO-010: unfinished/message checking does not treat a wordless symbolic
+  fragment as a linguistic sentence start. Duplicate commas and invalid starts
+  of actual linguistic sentences remain checked; strict prose is unchanged.
+
+Current frozen-corpus result: **0 false positives**, **0 missed supported
+errors**, **27 detections**, **21/21 corrections**, **8 unsupported checks**.
+Passing this curated workload does not establish correctness on arbitrary text.
 
 Native adapter regressions, after the benchmark build:
 `devenv --offline shell -- uv run --offline --no-project python -m unittest -v benchmarks.test_check_finnish`

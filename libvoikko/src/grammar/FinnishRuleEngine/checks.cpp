@@ -46,6 +46,7 @@ void gc_local_punctuation(VoikkoHandle * options, const Sentence * sentence) {
 	CacheEntry * e;
 	for (size_t i = 0; i < sentence->tokenCount; i++) {
 		Token t = sentence->tokens[i];
+		bool checkStarter;
 		switch (t.type) {
 		case TOKEN_WHITESPACE:
 			if (t.tokenlen > 1) {
@@ -79,7 +80,17 @@ void gc_local_punctuation(VoikkoHandle * options, const Sentence * sentence) {
 					continue;
 				}
 			}
-			if (i == 0) {
+			checkStarter = i == 0;
+			if (checkStarter && options->accept_unfinished_paragraphs_in_gc) {
+				checkStarter = false;
+				for (const Token & candidate : sentence->tokens) {
+					if (candidate.type == TOKEN_WORD) {
+						checkStarter = true;
+						break;
+					}
+				}
+			}
+			if (checkStarter) {
 				if (wcschr(L"()'-\u201C\u2013\u2014", t.str[0]) || isFinnishQuotationMark(t.str[0])) {
 					continue;
 				}

@@ -874,6 +874,8 @@ class Voikko(object):
     def setAcceptUnfinishedParagraphsInGc(self, value):
         """(Grammar checking only): Accept incomplete sentences at the end of the
         paragraph. These may exist when text is still being written.
+        Wordless symbolic fragments do not trigger invalid-sentence-start warnings;
+        other punctuation checks remain enabled.
         Default: false
         """
         self.setBooleanOption(14, value)

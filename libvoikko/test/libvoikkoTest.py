@@ -206,6 +206,15 @@ class LibvoikkoTest(unittest.TestCase):
             self.assertEqual([(9, 7, 10)],
                              [(e.errorCode, e.startPos, e.errorLen) for e in errors])
 
+    def testSymbolicFragmentsStillCheckLanguageAndCommas(self):
+        self.voikko.setAcceptUnfinishedParagraphsInGc(True)
+        self.assertEqual([], self.voikko.grammarErrors(u"Kiitos! :)", "fi"))
+        errors = self.voikko.grammarErrors(u"Kiitos! ,,", "fi")
+        self.assertEqual([(4, 8, 2)],
+                         [(e.errorCode, e.startPos, e.errorLen) for e in errors])
+        errors = self.voikko.grammarErrors(u"Kiitos! : Tiedot poistetaan.", "fi")
+        self.assertIn(5, [e.errorCode for e in errors])
+
     def testAnalyze(self):
         analysisList = self.voikko.analyze(u"kansaneläkehakemus")
         self.assertEqual(1, len(analysisList))
