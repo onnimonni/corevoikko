@@ -125,6 +125,11 @@ legitimate plain-text policies (`limitation:false-negative`):
 - VOIKKO-012 (P2 `bug:false-negative`): a foreign quotation mark `“` as the
   last token of a sentence was never examined (the check required two more
   tokens), so `”…“` passed. It now gets code 11 with suggestion `”`.
+- VOIKKO-013 (P1 `bug:false-positive`): decomposed Unicode (NFD, common in
+  macOS and some PDF/mail exports) split every word at combining diacritics:
+  `Säilytämme` became `Sa`+`ilyta`+`mme`, each flagged as a misspelling. The
+  spell API already normalized NFD; only the tokenizer classified U+0300–U+036F
+  as unknown. Combining marks now stay inside words; NFD typos are still caught.
 
 Current frozen-corpus result: **0 false positives**, **0 missed supported
 errors**, **27 detections**, **21/21 corrections**, **8 unsupported checks**.

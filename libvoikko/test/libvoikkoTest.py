@@ -236,6 +236,15 @@ class LibvoikkoTest(unittest.TestCase):
                          [(e.errorCode, e.startPos, e.errorLen, e.suggestions) for e in errors])
         self.assertEqual([], self.voikko.grammarErrors(u"Hän sanoi: \u201dTiedot poistetaan.\u201d", "fi"))
 
+    def testDecomposedTextIsTokenizedAsWholeWords(self):
+        import unicodedata
+        text = unicodedata.normalize("NFD", u"Säilytämme henkilötietoja.")
+        tokens = self.voikko.tokens(text)
+        self.assertEqual([Token.WORD, Token.WHITESPACE, Token.WORD, Token.PUNCTUATION],
+                         [t.tokenType for t in tokens])
+        self.assertTrue(all(self.voikko.spell(t.tokenText) for t in tokens if t.tokenType == Token.WORD))
+        self.assertFalse(self.voikko.spell(unicodedata.normalize("NFD", u"säilytettään")))
+
     def testAnalyze(self):
         analysisList = self.voikko.analyze(u"kansaneläkehakemus")
         self.assertEqual(1, len(analysisList))
