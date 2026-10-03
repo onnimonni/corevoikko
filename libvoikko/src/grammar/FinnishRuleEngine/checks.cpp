@@ -129,7 +129,7 @@ void gc_local_punctuation(VoikkoHandle * options, const Sentence * sentence) {
 }
 
 void gc_punctuation_of_quotations(VoikkoHandle * options, const Sentence * sentence) {
-	for (size_t i = 0; i + 2 < sentence->tokenCount; i++) {
+	for (size_t i = 0; i < sentence->tokenCount; i++) {
 		if (sentence->tokens[i].type != TOKEN_PUNCTUATION) {
 			continue;
 		}
@@ -144,7 +144,8 @@ void gc_punctuation_of_quotations(VoikkoHandle * options, const Sentence * sente
 			options->grammarChecker->cache.appendError(e);
 			return;
 		}
-		if (sentence->tokens[i + 1].type != TOKEN_PUNCTUATION) {
+		if (i + 2 >= sentence->tokenCount ||
+		    sentence->tokens[i + 1].type != TOKEN_PUNCTUATION) {
 			continue;
 		}
 		if (!isFinnishQuotationMark(sentence->tokens[i + 1].str[0])) {

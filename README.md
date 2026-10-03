@@ -83,6 +83,14 @@ Embedded NUL is unsupported grammar input and can silently return no findings.
 Adjacent verb A/MA-infinitive government **is** implemented and scored. No
 spelling/grammar result establishes privacy-law compliance or factual accuracy.
 
+Known gaps, deliberately not "fixed" because a stricter rule would flag
+legitimate plain-text policies (`limitation:false-negative`):
+
+- A paragraph ending in `,`, `;` or `:` passes the terminal-punctuation check.
+  Colons before lists and commas/semicolons on list lines are legitimate.
+- An unclosed opening parenthesis is not reported; only a stray closing one
+  (code 12) is. List markers such as `a)` make naive pairing unreliable.
+
 ### Retained fixes
 
 - VOIKKO-002: grammar analysis now stores every sentence in a paragraph instead
@@ -114,6 +122,9 @@ spelling/grammar result establishes privacy-law compliance or factual accuracy.
   terminating NUL was read out of bounds; a guarded-page repro crashed with
   SIGBUS. A shorter bound on the same text also returned a stale error lying
   outside the bound. The cache now stores and compares the exact length.
+- VOIKKO-012 (P2 `bug:false-negative`): a foreign quotation mark `“` as the
+  last token of a sentence was never examined (the check required two more
+  tokens), so `”…“` passed. It now gets code 11 with suggestion `”`.
 
 Current frozen-corpus result: **0 false positives**, **0 missed supported
 errors**, **27 detections**, **21/21 corrections**, **8 unsupported checks**.

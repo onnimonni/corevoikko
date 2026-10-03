@@ -229,6 +229,13 @@ class LibvoikkoTest(unittest.TestCase):
                                      lib.voikkoGetGrammarErrorLength(error)))
         lib.voikkoFreeGrammarError(error)
 
+    def testForeignQuotationMarkAsFinalToken(self):
+        text = u"Hän sanoi: \u201dTiedot poistetaan.\u201c"
+        errors = self.voikko.grammarErrors(text, "fi")
+        self.assertEqual([(11, len(text) - 1, 1, [u"\u201d"])],
+                         [(e.errorCode, e.startPos, e.errorLen, e.suggestions) for e in errors])
+        self.assertEqual([], self.voikko.grammarErrors(u"Hän sanoi: \u201dTiedot poistetaan.\u201d", "fi"))
+
     def testAnalyze(self):
         analysisList = self.voikko.analyze(u"kansaneläkehakemus")
         self.assertEqual(1, len(analysisList))
