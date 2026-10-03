@@ -1,0 +1,1565 @@
+{
+  "schema_version": 1,
+  "description": "Local source quotations and explicitly labelled authored contrast cases. Not a representative Finnish accuracy estimate.",
+  "sources": [
+    {
+      "id": "kela",
+      "title": "Tietosuoja ja henkilötietojen käsittely Kelassa",
+      "url": "https://www.kela.fi/tietosuoja",
+      "publisher": "Kela",
+      "accessed": "2026-10-03",
+      "license": "Not established; attributed short quotation"
+    },
+    {
+      "id": "yle",
+      "title": "Tietosuojaseloste – Abitreenit-palvelun asiakastutkimus 2024",
+      "url": "https://yle.fi/a/20-10006120",
+      "publisher": "Yle",
+      "accessed": "2026-10-03",
+      "license": "Not established; attributed short quotation"
+    },
+    {
+      "id": "kotus",
+      "title": "Kieliaineistojen käyttö",
+      "url": "https://kotus.fi/kotus/kieliaineistot/kieliaineistojen-kaytto/",
+      "publisher": "Kotimaisten kielten keskus",
+      "accessed": "2026-10-03",
+      "license": "Page-specific license not established; attributed short quotation"
+    },
+    {
+      "id": "messages",
+      "title": "Sähköposti, kirje ja muut viestit",
+      "url": "https://kielitoimistonohjepankki.fi/ohje/sahkoposti-kirje-ja-muut-viestit/",
+      "publisher": "Kielitoimiston ohjepankki",
+      "accessed": "2026-10-03",
+      "license": "Page-specific license not established; attributed short quotation"
+    },
+    {
+      "id": "upstream",
+      "title": "Voikko grammar help and regression cases",
+      "url": "https://github.com/voikko/corevoikko",
+      "license": "See upstream file licenses"
+    },
+    {
+      "id": "authored",
+      "title": "Authored minimal contrast cases",
+      "license": "Same GPL terms as repository"
+    },
+    {
+      "id": "authority",
+      "title": "Henkilötietojen pseudonymisointi ja anonymisointi",
+      "url": "https://tietosuoja.fi/pseudonymisointi-anonymisointi",
+      "publisher": "Tietosuojavaltuutetun toimisto",
+      "accessed": "2026-10-03",
+      "license": "Not established; attributed short quotation"
+    }
+  ],
+  "cases": [
+    {
+      "id": "privacy-kela",
+      "text": "Tietosuoja on perusoikeus, ja sillä tarkoitetaan henkilötietojen suojaamista. Henkilötiedoilla tarkoitetaan kaikkia sellaisia tietoja, jotka liittyvät tunnistettavissa olevaan henkilöön. Jokaisella henkilöllä on omiin tietoihinsa liittyviä oikeuksia.",
+      "category": "privacy",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "kela",
+      "origin": "verbatim",
+      "rationale": ""
+    },
+    {
+      "id": "privacy-kela-typo",
+      "text": "Tietosuoja on perusoikeus, ja sillä tarkoitetaan henkilötietojen suojaamista. Henkilötiedoilla tarkoitetaan kaikkia sellaisia tietoja, jotka liittyvät tunnistettavissa olevaan henkilöönn. Jokaisella henkilöllä on omiin tietoihinsa liittyviä oikeuksia.",
+      "category": "spelling",
+      "profile": "prose",
+      "expected": [
+        {
+          "kind": "spelling",
+          "start": 176,
+          "end": 186,
+          "text": "henkilöönn",
+          "correction": "henkilöön"
+        }
+      ],
+      "status": "scored",
+      "source": "kela",
+      "origin": "synthetic-mutation",
+      "rationale": "Duplicated terminal n; not present in source."
+    },
+    {
+      "id": "privacy-yle",
+      "text": "Säilytämme tutkimukseen liittyviä henkilötietoja 12 kk tutkimuksen alkamisesta. Tämän jälkeen tiedot anonymisoidaan.",
+      "category": "privacy",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "yle",
+      "origin": "verbatim",
+      "rationale": ""
+    },
+    {
+      "id": "privacy-yle-typo",
+      "text": "Säilytämme tutkimukseen liittyviä henkilötietoja 12 kk tutkimuksen alkamisesta. Tämän jälkeen tiedot anonymisoidaaan.",
+      "category": "spelling",
+      "profile": "prose",
+      "expected": [
+        {
+          "kind": "spelling",
+          "start": 101,
+          "end": 116,
+          "text": "anonymisoidaaan",
+          "correction": "anonymisoidaan"
+        }
+      ],
+      "status": "scored",
+      "source": "yle",
+      "origin": "synthetic-mutation",
+      "rationale": "Duplicated a; not present in source."
+    },
+    {
+      "id": "official-kotus-source-typo",
+      "text": "Tilaa Suomen kielen nauhoitearkiston aineistoja kuunneltavaksesi omalla laitteellasi täyttämällä tilauslomake ja lähettämällä se osoitteseen arkisto@kotus.fi.",
+      "category": "spelling",
+      "profile": "prose",
+      "expected": [
+        {
+          "kind": "spelling",
+          "start": 129,
+          "end": 140,
+          "text": "osoitteseen",
+          "correction": "osoitteeseen"
+        }
+      ],
+      "status": "scored",
+      "source": "kotus",
+      "origin": "verbatim-source-error",
+      "rationale": "Illative of osoite is osoitteeseen: missing e."
+    },
+    {
+      "id": "official-kotus-corrected",
+      "text": "Tilaa Suomen kielen nauhoitearkiston aineistoja kuunneltavaksesi omalla laitteellasi täyttämällä tilauslomake ja lähettämällä se osoitteeseen arkisto@kotus.fi.",
+      "category": "document",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "kotus",
+      "origin": "corrected-source",
+      "rationale": ""
+    },
+    {
+      "id": "greeting-exclamation",
+      "text": "Hei!\nSopiiko, että tavataan kello 14?",
+      "category": "correspondence",
+      "profile": "message",
+      "expected": [],
+      "status": "scored",
+      "source": "messages",
+      "origin": "verbatim",
+      "rationale": "Legitimate Finnish correspondence convention, not a prose fragment error."
+    },
+    {
+      "id": "greeting-comma",
+      "text": "Hei,\nvoidaanko kokous aloittaa huomenna jo kello 10?",
+      "category": "correspondence",
+      "profile": "message",
+      "expected": [],
+      "status": "scored",
+      "source": "messages",
+      "origin": "verbatim",
+      "rationale": "Legitimate Finnish correspondence convention, not a prose fragment error."
+    },
+    {
+      "id": "email-signature",
+      "text": "Terveisin\nElias Laine",
+      "category": "correspondence",
+      "profile": "message",
+      "expected": [],
+      "status": "scored",
+      "source": "messages",
+      "origin": "verbatim",
+      "rationale": "Legitimate Finnish correspondence convention, not a prose fragment error."
+    },
+    {
+      "id": "email-addressee",
+      "text": "Kelan tietoturvayksikön IT-analyytikko Tuisku Virtanen",
+      "category": "correspondence",
+      "profile": "title",
+      "expected": [],
+      "status": "scored",
+      "source": "messages",
+      "origin": "verbatim",
+      "rationale": "Legitimate Finnish correspondence convention, not a prose fragment error."
+    },
+    {
+      "id": "email-addressee-typo",
+      "text": "Kelan tietoturvayksikkön IT-analyytikko Tuisku Virtanen",
+      "category": "spelling",
+      "profile": "title",
+      "expected": [
+        {
+          "kind": "spelling",
+          "start": 6,
+          "end": 24,
+          "text": "tietoturvayksikkön",
+          "correction": "tietoturvayksikön"
+        }
+      ],
+      "status": "scored",
+      "source": "messages",
+      "origin": "synthetic-mutation",
+      "rationale": ""
+    },
+    {
+      "id": "negative-correct",
+      "text": "Minä en juokse.",
+      "category": "clean-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "negative-past",
+      "text": "Minä en juossut.",
+      "category": "clean-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "negative-plural",
+      "text": "Me emme juosseet.",
+      "category": "clean-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "negative-passive",
+      "text": "Tietoja ei luovuteta.",
+      "category": "clean-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "infinitive-a-correct",
+      "text": "Minä rohkenen juosta.",
+      "category": "clean-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "infinitive-ma-correct",
+      "text": "Minä erehdyin juoksemaan.",
+      "category": "clean-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "privacy-retention",
+      "text": "Säilytämme henkilötietoja kaksi vuotta.",
+      "category": "clean-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "privacy-rights",
+      "text": "Sinulla on oikeus pyytää tietojesi poistamista.",
+      "category": "clean-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "url",
+      "text": "Lisätietoja on osoitteessa https://www.kela.fi/tietosuoja.",
+      "category": "clean-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "email-address",
+      "text": "Lähetä viesti osoitteeseen arkisto@kotus.fi.",
+      "category": "clean-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "acronym",
+      "text": "Tiedot lähetetään EU-alueelle.",
+      "category": "clean-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "number",
+      "text": "Tiedot poistetaan 30 päivän kuluttua.",
+      "category": "clean-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "decimal",
+      "text": "Hinta on 12,50 euroa.",
+      "category": "clean-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "date",
+      "text": "Kokous pidetään 3.10.2026.",
+      "category": "clean-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "abbreviation",
+      "text": "Voit lähettää esim. sähköpostia.",
+      "category": "clean-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "quotes",
+      "text": "Hän sanoi: ”Tiedot poistetaan.”",
+      "category": "clean-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "parentheses",
+      "text": "Tiedot (myös osoite) poistetaan.",
+      "category": "clean-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "multiline",
+      "text": "Tietosuoja on tärkeää.\nTiedot poistetaan.",
+      "category": "clean-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "crlf",
+      "text": "Tietosuoja on tärkeää.\r\nTiedot poistetaan.",
+      "category": "clean-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "unicode-emoji",
+      "text": "Kiitos! 😊",
+      "category": "clean-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "compound",
+      "text": "Tietosuojavastaava käsittelee poistopyynnön.",
+      "category": "clean-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "compound-hyphen",
+      "text": "Sähköposti- ja puhelintiedot poistetaan.",
+      "category": "clean-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "initialism-case",
+      "text": "EU:n alueella noudatetaan tietosuoja-asetusta.",
+      "category": "clean-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "colon-time",
+      "text": "Kokous alkaa klo 14.30.",
+      "category": "clean-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "relative-clause",
+      "text": "Tiedot, jotka keräämme, poistetaan.",
+      "category": "clean-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "agreement-correct",
+      "text": "Me käsittelemme tietoja.",
+      "category": "clean-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "object-correct",
+      "text": "Luin asiakirjan eilen.",
+      "category": "clean-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "government-correct",
+      "text": "Pidän tästä palvelusta.",
+      "category": "clean-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "privacy-title",
+      "text": "Henkilötietojen käsittely",
+      "category": "genre",
+      "profile": "title",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "list-item",
+      "text": "- henkilötietojen poistaminen",
+      "category": "genre",
+      "profile": "list",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "message-fragment",
+      "text": "Kiitos avusta",
+      "category": "genre",
+      "profile": "message",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "message-question",
+      "text": "Sopiiko huomenna?",
+      "category": "genre",
+      "profile": "message",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "typo-transposition",
+      "text": "Tietosuojasta annetaan lisätietjoa.",
+      "category": "spelling",
+      "profile": "prose",
+      "expected": [
+        {
+          "kind": "spelling",
+          "start": 23,
+          "end": 34,
+          "text": "lisätietjoa",
+          "correction": "lisätietoja"
+        }
+      ],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "typo-extra-letter",
+      "text": "Käsittelemme henkilötietojja.",
+      "category": "spelling",
+      "profile": "prose",
+      "expected": [
+        {
+          "kind": "spelling",
+          "start": 13,
+          "end": 28,
+          "text": "henkilötietojja",
+          "correction": "henkilötietoja"
+        }
+      ],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "typo-missing-letter",
+      "text": "Tiedot positetaan.",
+      "category": "spelling",
+      "profile": "prose",
+      "expected": [
+        {
+          "kind": "spelling",
+          "start": 7,
+          "end": 17,
+          "text": "positetaan",
+          "correction": "poistetaan"
+        }
+      ],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "typo-umlaut",
+      "text": "Tietoja säilytettään.",
+      "category": "spelling",
+      "profile": "prose",
+      "expected": [
+        {
+          "kind": "spelling",
+          "start": 8,
+          "end": 20,
+          "text": "säilytettään",
+          "correction": "säilytetään"
+        }
+      ],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "typo-compound",
+      "text": "Tietosuojavastaaava auttaa.",
+      "category": "spelling",
+      "profile": "prose",
+      "expected": [
+        {
+          "kind": "spelling",
+          "start": 0,
+          "end": 19,
+          "text": "Tietosuojavastaaava",
+          "correction": "Tietosuojavastaava"
+        }
+      ],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "typo-after-newline",
+      "text": "Tiedot poistetaan.\nTietoja säilytettään.",
+      "category": "spelling",
+      "profile": "prose",
+      "expected": [
+        {
+          "kind": "spelling",
+          "start": 27,
+          "end": 39,
+          "text": "säilytettään",
+          "correction": "säilytetään"
+        }
+      ],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "typo-after-emoji",
+      "text": "Kiitos! 😊\nTietoja säilytettään.",
+      "category": "spelling",
+      "profile": "prose",
+      "expected": [
+        {
+          "kind": "spelling",
+          "start": 18,
+          "end": 30,
+          "text": "säilytettään",
+          "correction": "säilytetään"
+        }
+      ],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "subject-verb-agreement",
+      "text": "Me käsittelee tietoja.",
+      "category": "agreement",
+      "profile": "prose",
+      "expected": [
+        {
+          "kind": "grammar",
+          "start": 3,
+          "end": 13,
+          "text": "käsittelee"
+        }
+      ],
+      "status": "limitation",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": "Plural subject me requires käsittelemme, not käsittelee."
+    },
+    {
+      "id": "adjective-agreement",
+      "text": "Tämä tiedot poistetaan.",
+      "category": "agreement",
+      "profile": "prose",
+      "expected": [
+        {
+          "kind": "grammar",
+          "start": 0,
+          "end": 11,
+          "text": "Tämä tiedot"
+        }
+      ],
+      "status": "limitation",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": "Singular tämä with plural tiedot; use nämä tiedot."
+    },
+    {
+      "id": "case-government",
+      "text": "Pidän tämä palvelu.",
+      "category": "government",
+      "profile": "prose",
+      "expected": [
+        {
+          "kind": "grammar",
+          "start": 6,
+          "end": 18,
+          "text": "tämä palvelu"
+        }
+      ],
+      "status": "limitation",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": "Pitää in the sense of liking requires elative: tästä palvelusta."
+    },
+    {
+      "id": "object-case",
+      "text": "Luin asiakirja eilen.",
+      "category": "object-case",
+      "profile": "prose",
+      "expected": [
+        {
+          "kind": "grammar",
+          "start": 5,
+          "end": 14,
+          "text": "asiakirja"
+        }
+      ],
+      "status": "limitation",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": "Completed singular object requires asiakirjan."
+    },
+    {
+      "id": "semantic-contradiction",
+      "text": "Emme kerää henkilötietoja. Keräämme henkilötietoja.",
+      "category": "semantic",
+      "profile": "prose",
+      "expected": [
+        {
+          "kind": "grammar",
+          "start": 0,
+          "end": 51,
+          "text": "Emme kerää henkilötietoja. Keräämme henkilötietoja."
+        }
+      ],
+      "status": "limitation",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": "Contradictory assertions require document semantics, not spelling."
+    },
+    {
+      "id": "signature-comma",
+      "text": "Terveisin,\nElias Laine",
+      "category": "correspondence-format",
+      "profile": "message",
+      "expected": [
+        {
+          "kind": "grammar",
+          "start": 9,
+          "end": 10,
+          "text": ","
+        }
+      ],
+      "status": "limitation",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": "Finnish signature closing has no comma; message guide convention."
+    },
+    {
+      "id": "split-expression",
+      "text": "Minä olen joten kuten kaunis.",
+      "category": "supported-grammar",
+      "profile": "prose",
+      "expected": [
+        {
+          "kind": "grammar",
+          "start": 10,
+          "end": 21,
+          "text": "joten kuten",
+          "correction": "jotenkuten",
+          "code": 1
+        }
+      ],
+      "status": "scored",
+      "source": "upstream",
+      "origin": "upstream-regression",
+      "rationale": "Gold rule and span from existing fi-x-vfst grammar tests / Python API tests."
+    },
+    {
+      "id": "offset-expression",
+      "text": "Olen täi.\n\nOlen joten kuten.",
+      "category": "supported-grammar",
+      "profile": "prose",
+      "expected": [
+        {
+          "kind": "grammar",
+          "start": 16,
+          "end": 27,
+          "text": "joten kuten",
+          "correction": "jotenkuten",
+          "code": 1
+        }
+      ],
+      "status": "scored",
+      "source": "upstream",
+      "origin": "upstream-regression",
+      "rationale": "Gold rule and span from existing fi-x-vfst grammar tests / Python API tests."
+    },
+    {
+      "id": "space-before-comma",
+      "text": "Lause , jossa on pilkun edellä turha väli.",
+      "category": "supported-grammar",
+      "profile": "prose",
+      "expected": [
+        {
+          "kind": "grammar",
+          "start": 5,
+          "end": 7,
+          "text": " ,",
+          "code": 3
+        }
+      ],
+      "status": "scored",
+      "source": "upstream",
+      "origin": "upstream-regression",
+      "rationale": "Gold rule and span from existing fi-x-vfst grammar tests / Python API tests."
+    },
+    {
+      "id": "duplicate-comma",
+      "text": "Lause,, jossa on kaksi peräkkäistä pilkkua.",
+      "category": "supported-grammar",
+      "profile": "prose",
+      "expected": [
+        {
+          "kind": "grammar",
+          "start": 5,
+          "end": 7,
+          "text": ",,",
+          "code": 4
+        }
+      ],
+      "status": "scored",
+      "source": "upstream",
+      "origin": "upstream-regression",
+      "rationale": "Gold rule and span from existing fi-x-vfst grammar tests / Python API tests."
+    },
+    {
+      "id": "repeated-word",
+      "text": "Talo talo on väärin.",
+      "category": "supported-grammar",
+      "profile": "prose",
+      "expected": [
+        {
+          "kind": "grammar",
+          "start": 0,
+          "end": 9,
+          "text": "Talo talo",
+          "code": 8
+        }
+      ],
+      "status": "scored",
+      "source": "upstream",
+      "origin": "upstream-regression",
+      "rationale": "Gold rule and span from existing fi-x-vfst grammar tests / Python API tests."
+    },
+    {
+      "id": "negative-verb",
+      "text": "En juoksen kotiin.",
+      "category": "supported-grammar",
+      "profile": "prose",
+      "expected": [
+        {
+          "kind": "grammar",
+          "start": 0,
+          "end": 10,
+          "text": "En juoksen",
+          "code": 13
+        }
+      ],
+      "status": "scored",
+      "source": "upstream",
+      "origin": "upstream-regression",
+      "rationale": "Gold rule and span from existing fi-x-vfst grammar tests / Python API tests."
+    },
+    {
+      "id": "a-infinitive",
+      "text": "Pertti jaksaa tekemään läksyjä.",
+      "category": "supported-grammar",
+      "profile": "prose",
+      "expected": [
+        {
+          "kind": "grammar",
+          "start": 7,
+          "end": 22,
+          "text": "jaksaa tekemään",
+          "code": 14
+        }
+      ],
+      "status": "scored",
+      "source": "upstream",
+      "origin": "upstream-regression",
+      "rationale": "Gold rule and span from existing fi-x-vfst grammar tests / Python API tests."
+    },
+    {
+      "id": "ma-infinitive",
+      "text": "Pertti ryhtyy tehdä läksyjä.",
+      "category": "supported-grammar",
+      "profile": "prose",
+      "expected": [
+        {
+          "kind": "grammar",
+          "start": 7,
+          "end": 19,
+          "text": "ryhtyy tehdä",
+          "code": 15
+        }
+      ],
+      "status": "scored",
+      "source": "upstream",
+      "origin": "upstream-regression",
+      "rationale": "Gold rule and span from existing fi-x-vfst grammar tests / Python API tests."
+    },
+    {
+      "id": "legitimate-repetition-verb",
+      "text": "En ollut ollut kotona.",
+      "category": "grammar-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "upstream",
+      "origin": "upstream-regression",
+      "rationale": ""
+    },
+    {
+      "id": "legitimate-repetition-pronoun",
+      "text": "Kissa on levoton, sillä sillä on kirppuja.",
+      "category": "grammar-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "upstream",
+      "origin": "upstream-regression",
+      "rationale": ""
+    },
+    {
+      "id": "legitimate-grouped-number",
+      "text": "Voitin lotossa 3 000 000 euroa.",
+      "category": "grammar-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "upstream",
+      "origin": "upstream-regression",
+      "rationale": ""
+    },
+    {
+      "id": "known-abbreviation",
+      "text": "Hyllyllä on mm. hilloa.",
+      "category": "grammar-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "upstream",
+      "origin": "upstream-regression",
+      "rationale": ""
+    },
+    {
+      "id": "date-without-year",
+      "text": "Myös 20.3. satoi lunta.",
+      "category": "grammar-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "upstream",
+      "origin": "upstream-regression",
+      "rationale": ""
+    },
+    {
+      "id": "a-infinitive-control",
+      "text": "Pertti jaksaa tehdä läksyjä.",
+      "category": "grammar-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "upstream",
+      "origin": "upstream-regression",
+      "rationale": ""
+    },
+    {
+      "id": "ma-infinitive-control",
+      "text": "Pertti ryhtyy tekemään läksyjä.",
+      "category": "grammar-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "upstream",
+      "origin": "upstream-regression",
+      "rationale": ""
+    },
+    {
+      "id": "sentence-boundary-199",
+      "text": "Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Se oli joten kuten.",
+      "category": "coverage-boundary",
+      "profile": "prose",
+      "expected": [
+        {
+          "kind": "grammar",
+          "start": 2779,
+          "end": 2790,
+          "text": "joten kuten",
+          "correction": "jotenkuten",
+          "code": 1
+        }
+      ],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": "199 sentences; known error in last sentence. Paragraph limit is 200; silent truncation is a coverage bug."
+    },
+    {
+      "id": "sentence-boundary-200",
+      "text": "Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Se oli joten kuten.",
+      "category": "coverage-boundary",
+      "profile": "prose",
+      "expected": [
+        {
+          "kind": "grammar",
+          "start": 2793,
+          "end": 2804,
+          "text": "joten kuten",
+          "correction": "jotenkuten",
+          "code": 1
+        }
+      ],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": "200 sentences; known error in last sentence. Paragraph limit is 200; silent truncation is a coverage bug."
+    },
+    {
+      "id": "sentence-boundary-201",
+      "text": "Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Talo on talo. Se oli joten kuten.",
+      "category": "coverage-boundary",
+      "profile": "prose",
+      "expected": [
+        {
+          "kind": "grammar",
+          "start": 2807,
+          "end": 2818,
+          "text": "joten kuten",
+          "correction": "jotenkuten",
+          "code": 1
+        }
+      ],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": "201 sentences; known error in last sentence. Paragraph limit is 200; silent truncation is a coverage bug."
+    },
+    {
+      "id": "token-boundary-100",
+      "text": "Se oli joten kuten. Talo on talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo.",
+      "category": "coverage-boundary",
+      "profile": "prose",
+      "expected": [
+        {
+          "kind": "grammar",
+          "start": 7,
+          "end": 18,
+          "text": "joten kuten",
+          "correction": "jotenkuten",
+          "code": 1
+        }
+      ],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": "A long later sentence must not erase a supported error in an earlier sentence. Token ceiling is 500 including whitespace/punctuation."
+    },
+    {
+      "id": "token-boundary-130",
+      "text": "Se oli joten kuten. Talo on talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo.",
+      "category": "coverage-boundary",
+      "profile": "prose",
+      "expected": [
+        {
+          "kind": "grammar",
+          "start": 7,
+          "end": 18,
+          "text": "joten kuten",
+          "correction": "jotenkuten",
+          "code": 1
+        }
+      ],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": "A long later sentence must not erase a supported error in an earlier sentence. Token ceiling is 500 including whitespace/punctuation."
+    },
+    {
+      "id": "embedded-nul",
+      "text": "Talo on talo.\u0000Se oli joten kuten.",
+      "category": "input-coverage",
+      "profile": "prose",
+      "expected": [
+        {
+          "kind": "grammar",
+          "start": 21,
+          "end": 32,
+          "text": "joten kuten",
+          "correction": "jotenkuten",
+          "code": 1
+        }
+      ],
+      "status": "limitation",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": "Python grammar API rejects embedded NUL and returns no findings; unsupported input, not a clean verdict."
+    },
+    {
+      "id": "email-link-parentheses",
+      "text": "Katso lisätiedot (https://www.kela.fi/tietosuoja).",
+      "category": "integration-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "email-link-comma",
+      "text": "Katso https://www.kela.fi/tietosuoja, jos tarvitset lisätietoja.",
+      "category": "integration-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "email-link-question",
+      "text": "Löytyvätkö tiedot osoitteesta https://www.kela.fi/tietosuoja?",
+      "category": "integration-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "email-plus-address",
+      "text": "Lähetä viesti osoitteeseen etunimi.sukunimi+testi@example.fi.",
+      "category": "integration-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "email-short-address",
+      "text": "Lähetä viesti osoitteeseen a@b.fi.",
+      "category": "integration-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "privacy-gdpr",
+      "text": "Noudatamme EU:n yleistä tietosuoja-asetusta.",
+      "category": "integration-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "privacy-law-reference",
+      "text": "Noudatamme tietosuojalakia (1050/2018).",
+      "category": "integration-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "privacy-basis",
+      "text": "Käsittely perustuu suostumukseesi.",
+      "category": "integration-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "privacy-controller",
+      "text": "Rekisterinpitäjä vastaa henkilötietojen käsittelystä.",
+      "category": "integration-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "privacy-processor",
+      "text": "Henkilötietojen käsittelijä käsittelee tietoja rekisterinpitäjän lukuun.",
+      "category": "integration-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "privacy-pseudonymization",
+      "text": "Tiedot pseudonymisoidaan ennen tutkimusta.",
+      "category": "integration-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "privacy-minimization",
+      "text": "Noudatamme tietojen minimoinnin periaatetta.",
+      "category": "integration-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "privacy-storage-limitation",
+      "text": "Säilytyksen rajoittaminen suojaa rekisteröityä.",
+      "category": "integration-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "privacy-legal-obligation",
+      "text": "Käsittely perustuu lakisääteiseen velvoitteeseen.",
+      "category": "integration-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "privacy-portability",
+      "text": "Sinulla on oikeus siirtää tiedot järjestelmästä toiseen.",
+      "category": "integration-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "privacy-consent-withdrawal",
+      "text": "Voit peruuttaa suostumuksesi milloin tahansa.",
+      "category": "integration-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "privacy-access-request",
+      "text": "Voit tehdä tarkastuspyynnön sähköpostitse.",
+      "category": "integration-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "unicode-nbsp",
+      "text": "Tiedot poistetaan.",
+      "category": "integration-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "unicode-narrow-nbsp",
+      "text": "Hinta on 1 000 euroa.",
+      "category": "integration-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "unicode-en-dash",
+      "text": "Tietoja säilytetään 2–3 vuotta.",
+      "category": "integration-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "unicode-smart-quotes",
+      "text": "Hän sanoi: ”Tietosuoja on tärkeää.”",
+      "category": "integration-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "initials",
+      "text": "A. Virtanen käsittelee hakemuksen.",
+      "category": "integration-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "sentence-after-time",
+      "text": "Kokous alkaa klo 14.30. Tiedot poistetaan.",
+      "category": "integration-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "sentence-after-date",
+      "text": "Kokous pidetään 3.10.2026. Tiedot poistetaan.",
+      "category": "integration-control",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "title-section-number",
+      "text": "1. Henkilötietojen käsittely",
+      "category": "genre",
+      "profile": "title",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "list-no-marker",
+      "text": "henkilötietojen poistaminen",
+      "category": "genre",
+      "profile": "list",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "message-emoticon",
+      "text": "Kiitos! :)",
+      "category": "genre",
+      "profile": "message",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "message-emoji",
+      "text": "Kiitos! 😊",
+      "category": "genre",
+      "profile": "message",
+      "expected": [],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": ""
+    },
+    {
+      "id": "relative-pronoun",
+      "text": "Talo, kuka on suuri, näkyy.",
+      "category": "relative-pronoun",
+      "profile": "prose",
+      "expected": [
+        {
+          "kind": "grammar",
+          "start": 6,
+          "end": 10,
+          "text": "kuka",
+          "correction": "joka"
+        }
+      ],
+      "status": "limitation",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": "A building is referred to with joka, not kuka. RelativePronounCheck is an empty registered method in this Finnish engine."
+    },
+    {
+      "id": "authority-pseudonymization",
+      "text": "Henkilötiedot voidaan pseudonymisoida tai anonymisoida.",
+      "category": "privacy",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authority",
+      "origin": "verbatim",
+      "rationale": "Authoritative privacy terminology is valid even if absent from the standard dictionary."
+    },
+    {
+      "id": "authority-definition",
+      "text": "Pseudonymisointi tarkoittaa henkilötietojen käsittelemistä siten, että henkilötietoja ei voida enää yhdistää tiettyyn henkilöön ilman lisätietoja.",
+      "category": "privacy",
+      "profile": "prose",
+      "expected": [],
+      "status": "scored",
+      "source": "authority",
+      "origin": "verbatim",
+      "rationale": "Authoritative privacy terminology is valid even if absent from the standard dictionary."
+    },
+    {
+      "id": "exact-token-boundary-499",
+      "text": "Se oli joten kuten. Talo on talo, talo, talo, talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo.",
+      "category": "coverage-boundary",
+      "profile": "prose",
+      "expected": [
+        {
+          "kind": "grammar",
+          "start": 7,
+          "end": 18,
+          "text": "joten kuten",
+          "correction": "jotenkuten",
+          "code": 1
+        }
+      ],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": "Later sentence has 499 tokenizer tokens; check confirmed at runtime. Error in preceding short sentence must remain detectable."
+    },
+    {
+      "id": "exact-token-boundary-500",
+      "text": "Se oli joten kuten. Talo on talo, talo, talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo.",
+      "category": "coverage-boundary",
+      "profile": "prose",
+      "expected": [
+        {
+          "kind": "grammar",
+          "start": 7,
+          "end": 18,
+          "text": "joten kuten",
+          "correction": "jotenkuten",
+          "code": 1
+        }
+      ],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": "Later sentence has 500 tokenizer tokens; check confirmed at runtime. Error in preceding short sentence must remain detectable."
+    },
+    {
+      "id": "exact-token-boundary-501",
+      "text": "Se oli joten kuten. Talo on talo, talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo ja talo.",
+      "category": "coverage-boundary",
+      "profile": "prose",
+      "expected": [
+        {
+          "kind": "grammar",
+          "start": 7,
+          "end": 18,
+          "text": "joten kuten",
+          "correction": "jotenkuten",
+          "code": 1
+        }
+      ],
+      "status": "scored",
+      "source": "authored",
+      "origin": "authored",
+      "rationale": "Later sentence has 501 tokenizer tokens; check confirmed at runtime. Error in preceding short sentence must remain detectable."
+    }
+  ]
+}
