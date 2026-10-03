@@ -297,12 +297,18 @@ legitimate plain-text policies (`limitation:false-negative`):
   filter of company, product and service names (`benchmarks/name_filter.py`,
   built by `benchmarks/build_name_filter.py`, loaded with
   `check_finnish.py --names names.bloom`).
-  - A filter built from the PRH register reports `<Name> Oy|Oyj|Ab|Abp|Ky|Kb|Ay|Osk`
-    mentions whose name is not a current registered name:
-    `CONCOCONNENTE Oy` → "Yritystä ei löydy kaupparekisteristä". A Bloom filter
-    has no false negatives, so such a finding means the name is absent from the
-    data; a false positive only hides a finding. Associations (`ry`, separate
-    Register of Associations) and `Tmi` are never reported.
+  - A filter built from the complete PRH register reports
+    `<Name> Oy|Oyj|Ab|Abp|Ky|Kb|Ay|Osk` mentions whose name is not a current
+    registered name, dated with the register snapshot: `CONCOCONNENTE Oy` →
+    "Yritystä ei löydy kaupparekisteristä (PRH, tilanne 3.6.2025)", plus
+    `"as_of": "2025-06-03"` in the JSON. The date is the timestamp of the JSON
+    inside PRH's `all_companies` ZIP (when PRH generated it), overridable with
+    `--prh-date`. Only that ZIP (or `--prh-complete`) marks the register
+    complete; a partial PRH file excuses names but never reports unknown
+    companies. A Bloom filter has no false negatives, so such a finding means
+    the name is absent from that snapshot; a false positive only hides a
+    finding. Associations (`ry`, separate Register of Associations) and `Tmi`
+    are never reported.
   - Any filter excuses known names as spelling errors, also inflected
     (`Storian`, `Paytrailin`, `Kanta-`); a word that only occurs inside a
     multiword name is excused only if it is not one keystroke from a Finnish

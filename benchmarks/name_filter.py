@@ -150,8 +150,13 @@ class NameFilter:
 
     @property
     def covers_finnish_companies(self):
-        """Only a filter built from the PRH register may call a company unknown."""
-        return self.metadata.get("prh_companies", 0) > 0
+        """Only a filter built from the complete PRH register may call a company unknown."""
+        return bool(self.metadata.get("prh_complete")) and bool(self.register_date)
+
+    @property
+    def register_date(self):
+        """Date of the PRH register snapshot (ISO), or None."""
+        return self.metadata.get("prh_register_date")
 
     def knows_name(self, token):
         """A (possibly inflected) token is itself a known name: Storian, Kanta-, Paytrailin."""

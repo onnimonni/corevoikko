@@ -1,5 +1,6 @@
 """Offline Finnish checker and span-scored accuracy benchmark using upstream bindings."""
 import argparse
+import datetime
 import gzip
 import hashlib
 import json
@@ -199,9 +200,11 @@ def _company_diagnostics(checker, text):
         if len(words) > 1 and re.search(r"(^|[.!?:]\s+)$", text[:start]) and checker.spell(words[0].lower()):
             start = text.index(words[1], start)
         end = match.end("form")
+        as_of = datetime.date.fromisoformat(names.register_date)
         result.append({"kind": "name", "code": None, "start": start, "end": end, "text": text[start:end],
-                       "description": "Yritystä ei löydy kaupparekisteristä (PRH): tarkista nimi.",
-                       "suggestions": []})
+                       "description": f"Yritystä ei löydy kaupparekisteristä (PRH, tilanne "
+                                      f"{as_of.day}.{as_of.month}.{as_of.year}): tarkista nimi.",
+                       "as_of": names.register_date, "suggestions": []})
     return result
 
 

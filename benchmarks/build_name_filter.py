@@ -47,13 +47,17 @@ def _sha256(path):
 
 
 def prh_names(path):
-    """Current names (version 1, no end date) of every company in the PRH bulk file.
-    Accepts the downloaded ZIP or the JSON inside it; the JSON may be a list of
-    companies or an object with a "companies" list (API search responses)."""
+    """(current names, company count, snapshot date) from the PRH bulk file.
+    Current = version 1, no end date. Accepts the downloaded ZIP or the JSON
+    inside it; the JSON may be a list of companies or an object with a
+    "companies" list (API search responses). The snapshot date is the ZIP
+    member's timestamp, i.e. when PRH generated the file; None for plain JSON."""
     path = Path(path)
+    snapshot = None
     if zipfile.is_zipfile(path):
         with zipfile.ZipFile(path) as archive:
-            member = next(n for n in archive.namelist() if n.endswith(".json"))
+            member = next(i for i in archive.infolist() if i.filename.endswith(".json"))
+            snapshot = datetime.date(*member.date_time[:3])
             data = json.load(io.TextIOWrapper(archive.open(member), encoding="utf-8"))
     else:
         data = json.loads(path.read_text(encoding="utf-8"))
@@ -63,7 +67,7 @@ def prh_names(path):
         for entry in company.get("names", []):
             if entry.get("version", 1) == 1 and not entry.get("endDate") and entry.get("name"):
                 names.append(entry["name"])
-    return names, len(companies)
+    return names, len(companies), snapshot
 
 
 def wikidata_names(path):
@@ -102,13 +106,25 @@ def main():
     parser.add_argument("--seed", type=Path, action="append", default=[])
     parser.add_argument("--false-positive-rate", type=float, default=1e-5)
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument("--prh-date", type=datetime.date.fromisoformat,
+                        help="Register snapshot date (YYYY-MM-DD); default: timestamp inside the PRH ZIP")
+    parser.add_argument("--prh-complete", action="store_true",
+                        help="Treat --prh as the complete Trade Register (implied for the all_companies ZIP)")
     args = parser.parse_args()
 
-    names, used, prh_companies = [], [], 0
+    names, used, prh_meta = [], [], {}
     if args.prh:
-        prh, prh_companies = prh_names(args.prh)
+        prh, prh_companies, snapshot = prh_names(args.prh)
         names += prh
-        used.append({**SOURCES["prh"], "records": len(prh), "companies": prh_companies, "sha256": _sha256(args.prh)})
+        snapshot = args.prh_date or snapshot
+        # Only the complete register may call a company unknown; a sample would
+        # report every real company outside it.
+        complete = args.prh_complete or zipfile.is_zipfile(args.prh)
+        if complete and snapshot is None:
+            parser.error("--prh-date is required: no snapshot date in the PRH file")
+        prh_meta = {"prh_complete": complete, "prh_register_date": snapshot and snapshot.isoformat()}
+        used.append({**SOURCES["prh"], "records": len(prh), "companies": prh_companies,
+                     "snapshot": prh_meta["prh_register_date"], "sha256": _sha256(args.prh)})
     if args.wikidata:
         found = wikidata_names(args.wikidata)
         names += found
@@ -125,7 +141,7 @@ def main():
         parser.error("no sources given")
 
     name_filter = NameFilter.build(names, {
-        "built": datetime.date.today().isoformat(), "sources": used, "prh_companies": prh_companies,
+        "built": datetime.date.today().isoformat(), "sources": used, **prh_meta,
     }, args.false_positive_rate)
     name_filter.save(args.out)
     meta = name_filter.metadata

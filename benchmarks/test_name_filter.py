@@ -1,8 +1,10 @@
 """Name Bloom filter: filter properties and checker integration (real Voikko)."""
+import datetime
 import random
 import string
 import tempfile
 import unittest
+import zipfile
 from pathlib import Path
 
 from benchmarks.check_finnish import ROOT, Voikko, configure, diagnostics
@@ -25,7 +27,8 @@ class BloomFilterTest(unittest.TestCase):
         self.assertLess(rate, 2e-3)
 
     def testSaveLoadRoundTripKeepsMetadata(self):
-        built = NameFilter.build(["Storia Oy"], {"sources": [{"name": "test"}], "prh_companies": 1})
+        built = NameFilter.build(["Storia Oy"], {"sources": [{"name": "test"}], "prh_complete": True,
+                                                 "prh_register_date": "2025-06-03"})
         with tempfile.TemporaryDirectory() as tmp:
             built.save(Path(tmp) / "names.bloom")
             loaded = NameFilter.load(Path(tmp) / "names.bloom")
@@ -48,16 +51,18 @@ class NameFilterCheckerTest(unittest.TestCase):
         self.addCleanup(self.checker.terminate)
         configure(self.checker, "prose")
         from build_name_filter import prh_names, seed_names
-        prh, companies = prh_names(DATA / "prh_sample.json")
+        prh, _, _ = prh_names(DATA / "prh_sample.json")
+        # Simulates a complete register snapshot; the sample itself is not one.
         self.checker._names = NameFilter.build(prh + seed_names(DATA / "name_seed.tsv"),
-                                               {"prh_companies": companies})
+                                               {"prh_complete": True, "prh_register_date": "2025-06-03"})
 
     def found(self, text):
         return [(d["kind"], d["text"]) for d in diagnostics(self.checker, text)]
 
     def testUnknownCompanyIsReported(self):
-        self.assertEqual([("name", "CONCOCONNENTE Oy")],
-                         self.found("Rekisterinpitäjänä toimii CONCOCONNENTE Oy."))
+        found = diagnostics(self.checker, "Rekisterinpitäjänä toimii CONCOCONNENTE Oy.")
+        self.assertEqual([("name", "CONCOCONNENTE Oy", "2025-06-03")], [(d["kind"], d["text"], d["as_of"]) for d in found])
+        self.assertIn("tilanne 3.6.2025", found[0]["description"])
         self.assertEqual([("name", "Stoira Oy")], self.found("Tiedot käsittelee Stoira Oy."))
         for text in ("Rekisterinpitäjänä toimii Storia Oy.", "Tiedot siirretään Storia Oy:lle.",
                      "Rekisterinpitäjä Yleisradio Oy vastaa tiedoista."):
@@ -77,10 +82,22 @@ class NameFilterCheckerTest(unittest.TestCase):
         self.assertEqual([("grammar", "Analytics-palvelua")],
                          self.found("Sivustomme käyttää Google Analytics-palvelua."))
 
-    def testWithoutRegisterNoCompanyIsCalledUnknown(self):
-        self.checker._names = NameFilter.build(["Storia Oy"], {"prh_companies": 0})
+    def testIncompleteRegisterNeverCallsCompanyUnknown(self):
+        self.checker._names = NameFilter.build(["Storia Oy"], {"prh_complete": False, "prh_register_date": "2025-06-03"})
         found = self.found("Rekisterinpitäjänä toimii CONCOCONNENTE Oy.")
         self.assertEqual([], [d for d in found if d[0] == "name"])
+
+    def testSnapshotDateComesFromPrhZip(self):
+        from build_name_filter import prh_names
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "all_companies.zip"
+            with zipfile.ZipFile(path, "w") as archive:
+                archive.writestr(zipfile.ZipInfo("companies.json", (2025, 6, 3, 4, 0, 0)),
+                                 (DATA / "prh_sample.json").read_bytes())
+            names, companies, snapshot = prh_names(path)
+        self.assertEqual((datetime.date(2025, 6, 3), 5), (snapshot, companies))
+        self.assertIn("Storia Oy", names)
+        self.assertNotIn("Sava Group Oy", names)  # ended former name
 
 
 if __name__ == "__main__":
