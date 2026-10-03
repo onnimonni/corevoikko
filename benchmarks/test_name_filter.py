@@ -90,9 +90,12 @@ class NameFilterCheckerTest(unittest.TestCase):
         self.assertEqual([], self.found("Paytrailin maksupalvelu on turvallinen."))
 
     def testIncompleteRegisterNeverCallsCompanyUnknown(self):
+        # A partial PRH file (sample without Paytrail) once reported real
+        # companies as unregistered; it may only excuse names it contains.
         self.checker._names = NameFilter.build(["Storia Oy"], {"prh_complete": False, "prh_register_date": "2025-06-03"})
-        found = self.found("Rekisterinpitäjänä toimii CONCOCONNENTE Oy.")
-        self.assertEqual([], [d for d in found if d[0] == "name"])
+        self.assertEqual([("spelling", "CONCOCONNENTE")], self.found("Rekisterinpitäjänä toimii CONCOCONNENTE Oy."))
+        self.assertEqual([("spelling", "Paytrail")], self.found("Maksut käsittelee Paytrail Oyj."))
+        self.assertEqual([], self.found("Rekisterinpitäjänä toimii Storia Oy."))
 
     def testStaleRegisterIsFlaggedAfter30Days(self):
         def finding(age):
