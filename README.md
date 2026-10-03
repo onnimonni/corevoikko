@@ -136,6 +136,14 @@ legitimate plain-text policies (`limitation:false-negative`):
   after VOIKKO-022. Remaining (`limitation:message-format`): the endorsed
   lowercase signature `t. Tuisku` after `Hyvää joulunodotusta!` gets code 7,
   and `PS Muista kokous.` (undotted PS) gets code 6 on `Muista`.
+- Third real document (Otava web-shop privacy policy, 26 blocks): 9
+  diagnostics after VOIKKO-024, recall 34/35 (the miss is inside a URL). The
+  residue is unknown company names (`Storia`, `Paytrail`), the English gloss
+  `Cookie`, and two genuine source issues: a capitalized common noun
+  (`Tietosuojaselostetta`, code 6) and a sentence without a full stop (code 9).
+  The page also has two real grammar errors that pass silently, illustrating the
+  unsupported classes: case government *Evästeistä käytetään* (should be
+  *Evästeitä*) and a stray comma before the adverbial *joka kerta*.
 - Document structure (`limitation:document-structure`): the CLI applies one
   profile per file. Headings and list items need `title`/`list` profiles,
   which require structure from the source format (HTML/DOCX), not plain text.
@@ -227,6 +235,9 @@ legitimate plain-text policies (`limitation:false-negative`):
   are matched (`Terveisin`, `Ystävällisin terveisin`, `Kunnioittavasti`, …);
   `Hei,` and formula words inside a sentence are untouched. This moves the
   corpus's `signature-comma` case from unsupported to detected (1/8).
+- VOIKKO-024 (`coverage:dictionary`): `IP` (Internet Protocol, per
+  Kielitoimiston ohjepankki's lyhenneluettelo) added with front-vowel endings,
+  so `IP-osoite`/`IP-osoitteen` pass; `IP:ta` stays rejected.
 
 Current frozen-corpus result: **0 false positives**, **0 missed supported
 errors**, **27 detections**, **21/21 corrections**; 1 of the 8 unsupported

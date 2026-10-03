@@ -105,6 +105,10 @@ class TextCheckerTest(unittest.TestCase):
                      "Lähetän kunnioittavasti, mutta päättäväisesti tämän viestin."):
             self.assertEqual([], diagnostics(self.checker, text), text)
 
+    def testIpAddressTerm(self):
+        self.assertEqual([True, True, True, True, False],
+                         [self.checker.spell(w) for w in ("IP", "IP:tä", "IP-osoite", "IP-osoitteen", "IP:ta")])
+
 
 if __name__ == "__main__":
     unittest.main()
