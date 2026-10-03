@@ -271,11 +271,19 @@ static CapitalizationState inUpper(CapitalizationContext & context) {
 	return LOWER;
 }
 
-/** Finnish/Swedish company-form abbreviations, written with a capital initial. */
+/**
+ * Finnish/Swedish company-form abbreviation, written with a capital initial,
+ * either bare ("Oy") or inflected after a colon ("Oy:n", "Oyj:ssä").
+ */
 static bool isCompanyForm(const Token * token) {
 	static const wchar_t * const forms[] = {L"Oy", L"Oyj", L"Ab", L"Abp", L"Ky", L"Ay", L"Tmi", 0};
+	if (token->type != TOKEN_WORD) {
+		return false;
+	}
 	for (const wchar_t * const * form = forms; *form; ++form) {
-		if (token->type == TOKEN_WORD && wcscmp(token->str, *form) == 0) {
+		size_t length = wcslen(*form);
+		if (wcsncmp(token->str, *form, length) == 0 &&
+		    (token->str[length] == L'\0' || token->str[length] == L':')) {
 			return true;
 		}
 	}

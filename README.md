@@ -142,11 +142,13 @@ legitimate plain-text policies (`limitation:false-negative`):
   as unknown. Combining marks now stay inside words; NFD typos are still caught.
 - VOIKKO-014 (P1 `bug:false-positive`): company names got "write in lowercase"
   (code 6) on the company form itself — `Posti Oy`, `Nokia Oyj` — and on
-  capitalized name words before it. `Oy`/`Oyj`/`Ab`/`Abp`/`Ky`/`Ay`/`Tmi` and
-  the capitalized run ending in one are now accepted. A capitalized common
-  noun outside such a run is still reported.
+  capitalized name words before it. `Oy`/`Oyj`/`Ab`/`Abp`/`Ky`/`Ay`/`Tmi`,
+  including inflected forms such as `Oy:n` and `Oyj:ssä`, and the capitalized
+  run ending in one are now accepted. A capitalized common noun outside such a
+  run is still reported.
 - VOIKKO-015 (`coverage:dictionary` + `integration:spelling-adapter`): added
-  `GDPR` as an abbreviation with front-vowel endings (`GDPR:ää`, `GDPR:ssä`;
+  `GDPR` in `vvfst/poikkeavat.lexc` (not the `joukahainen.xml` export, which
+  `make update-vocabulary` overwrites) with front-vowel endings (`GDPR:ää`, `GDPR:ssä`;
   `GDPR:aa` and `GDRP` stay rejected). The adapter no longer spell-checks
   letterless tokens such as Y-tunnus `1234567-8`, `040-1234567` and ISO dates;
   tokens with letters, e.g. `kissa2`, are still checked.

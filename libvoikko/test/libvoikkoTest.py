@@ -249,6 +249,10 @@ class LibvoikkoTest(unittest.TestCase):
         for name in (u"Posti Oy", u"Nokia Oyj", u"Esimerkki Palvelut Oy", u"Oy Esimerkki Ab"):
             text = u"Rekisterinpitäjänä toimii " + name + u"."
             self.assertEqual([], self.voikko.grammarErrors(text, "fi"), text)
+        for text in (u"Tiedot ovat Esimerkki Oy:n rekisterissä.",
+                     u"Tiedot ovat Nokia Oyj:ssä.",
+                     u"Tiedot siirretään Esimerkki Palvelut Oy:lle."):
+            self.assertEqual([], self.voikko.grammarErrors(text, "fi"), text)
         # A capitalized common noun outside a company name is still reported.
         errors = self.voikko.grammarErrors(u"Rekisterinpitäjänä toimii Esimerkki ja Oy.", "fi")
         self.assertEqual([(6, 26, 9)], [(e.errorCode, e.startPos, e.errorLen) for e in errors])

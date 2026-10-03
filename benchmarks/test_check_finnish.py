@@ -38,6 +38,16 @@ class TextCheckerTest(unittest.TestCase):
             self.assertEqual([("spelling", typo)],
                              [(e["kind"], e["text"]) for e in diagnostics(self.checker, text)])
 
+    def testMisspelledSignOffIsAutocorrected(self):
+        errors = diagnostics(self.checker, "Ystävälisin terveisin\nElias Laine")
+        self.assertEqual([("grammar", 1, 0, 11, ["Ystävällisin"])],
+                         [(e["kind"], e.get("code"), e["start"], e["end"], e["suggestions"]) for e in errors])
+        self.assertEqual([], diagnostics(self.checker, "Ystävällisin terveisin\nElias Laine"))
+
+    def testGdprInflectsWithFrontVowels(self):
+        self.assertEqual([True, True, True, False],
+                         [self.checker.spell(w) for w in ("GDPR:n", "GDPR:ää", "GDPR:ssä", "GDPR:aa")])
+
 
 if __name__ == "__main__":
     unittest.main()
