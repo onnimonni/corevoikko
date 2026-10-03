@@ -110,8 +110,8 @@ legitimate plain-text policies (`limitation:false-negative`):
   VOIKKO-017/018; none is a genuine error in the source): agency/page names seen
   once (`Automaattiset päätökset`, `Tietoluvat`), inconsistently cased words
   (`Kirjaamo` vs `kirjaamoon`), and dictionary gaps — the prefix *toisio-*
-  (`toisiolaki`, `toisiokäyttö`), standalone `PDF`/`pdf`, `PL` (postilokero),
-  programme names `Eepos`, `Kanta`.
+  (`toisiolaki`, `toisiokäyttö`), standalone `PDF`/`pdf`, programme names
+  `Eepos`, `Kanta`. (`PL` was fixed in VOIKKO-021.)
 - Organisation names (`coverage:dictionary-config`): 113 vocabulary entries
   flagged `orgname` (Fimea, Valvira, Nordea, Tekes, Siemens, Kone, …) are
   excluded from the default build. Building with
@@ -127,7 +127,7 @@ legitimate plain-text policies (`limitation:false-negative`):
 - Second real document (Yle Abitreenit privacy notice, 45 blocks): 9
   diagnostics after VOIKKO-020; recall 39/40 injected typos (the one miss is
   inside an email address, which is never spell-checked by design). Residue:
-  product name `Abitreenit-`, surname `Hausen`, `PL`, code 17 on bold run-in
+  product name `Abitreenit-`, surname `Hausen`, code 17 on bold run-in
   headings flattened into prose (`Oikeus saada pääsy tietoihisi.`), and one
   genuine source issue: a sentence ending in a URL without a full stop (code 9).
 - Document structure (`limitation:document-structure`): the CLI applies one
@@ -178,7 +178,9 @@ legitimate plain-text policies (`limitation:false-negative`):
   capitalized name words before it. `Oy`/`Oyj`/`Ab`/`Abp`/`Ky`/`Ay`/`Tmi`,
   including inflected forms such as `Oy:n` and `Oyj:ssä`, and the capitalized
   run ending in one are now accepted. A capitalized common noun outside such a
-  run is still reported.
+  run is still reported. Source: Kielitoimiston ohjepankki, "Yhdistys- tai
+  yhtiömuotoa ilmaisevat lyhenteet: ry, oy" — *oy*/*oyj* may by established
+  practice be capitalized (*Kemira oyj ~ Kemira Oyj*); both remain accepted.
 - VOIKKO-015 (`coverage:dictionary` + `integration:spelling-adapter`): added
   `GDPR` in `vvfst/poikkeavat.lexc` (not the `joukahainen.xml` export, which
   `make update-vocabulary` overwrites) with front-vowel endings (`GDPR:ää`, `GDPR:ssä`;
@@ -206,6 +208,9 @@ legitimate plain-text policies (`limitation:false-negative`):
   back-vowel endings (`ETA:n`, `ETA:ssa`, `ETA-maissa`; `ETA:ssä` rejected).
   It was absent, so every "EU- tai ETA-maissa" in a data-transfer section was
   flagged.
+- VOIKKO-021 (`coverage:dictionary`): `PL` (postilokero, per Kielitoimiston
+  ohjepankki's lyhenneluettelo) added as an uninflected abbreviation for
+  addresses such as `PL 450, 00056 Kela`; `PLL` stays rejected.
 
 Current frozen-corpus result: **0 false positives**, **0 missed supported
 errors**, **27 detections**, **21/21 corrections**, **8 unsupported checks**.

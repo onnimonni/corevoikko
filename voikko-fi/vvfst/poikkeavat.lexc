@@ -23,6 +23,8 @@ LEXICON Poikkeavat_a
 [La][Xr]jjjj[X][Xp]GDPR[X]gdpr:gdpr	Lyhenne_ä	;
 ! ETA: Euroopan talousalue (read as "eta"; ETA:n, ETA:ssa, ETA-maissa).
 [La][Xr]jjj[X][Xp]ETA[X]eta:eta	Lyhenne_a	;
+! PL: postilokero (Kielitoimiston ohjepankki, lyhenneluettelo P); used uninflected in addresses ("PL 450").
+[La][Xr]jj[X][Xp]PL[X]pl:pl	LyhenneIlmanTaivutusta_aä	;
 [La][Xp]h[X]h%:eissa:h%:eissa	Liitesana_a	;
 [La][Xp]h[X]h%:eineen:h%:eineen	Liitesana_a	;
 [La][Xp]h[X]h%:eina:h%:eina	Liitesana_a	;

@@ -84,6 +84,11 @@ class TextCheckerTest(unittest.TestCase):
                          [self.checker.spell(w) for w in
                           ("ETA", "ETA:n", "ETA:ssa", "ETA-maissa", "ETA:ssä", "XYZ-maissa")])
 
+    def testPostOfficeBoxAbbreviation(self):
+        configure(self.checker, "prose")
+        self.assertEqual([], diagnostics(self.checker, "Lähetä se osoitteeseen Kela, PL 450, 00056 Kela."))
+        self.assertEqual([True, False], [self.checker.spell(w) for w in ("PL", "PLL")])
+
 
 if __name__ == "__main__":
     unittest.main()
