@@ -175,6 +175,14 @@ class LibvoikkoTest(unittest.TestCase):
         self.assertEqual([(1, len(prefix) + 7, 11)],
                          [(e.errorCode, e.startPos, e.errorLen) for e in errors])
 
+    def testGrammarErrorsSurviveLongSentences(self):
+        longSentence = u"Talo on " + u"talo ja " * 130 + u"talo."
+        prefix = u"Se oli joten kuten. "
+        suffix = u" Se oli joten kuten."
+        errors = self.voikko.grammarErrors(prefix + longSentence + suffix, "fi")
+        self.assertEqual([(1, 7, 11), (1, len(prefix + longSentence) + 8, 11)],
+                         [(e.errorCode, e.startPos, e.errorLen) for e in errors])
+
     def testAnalyze(self):
         analysisList = self.voikko.analyze(u"kansaneläkehakemus")
         self.assertEqual(1, len(analysisList))

@@ -72,7 +72,7 @@ bool VfstAutocorrectCheck::check(VoikkoHandle * options, const Sentence * senten
 	size_t sentenceLengthUtf = 0;
 	size_t sentenceLengthUcs = 0;
 	for (size_t i = 0; i < sentence->tokenCount; i++) {
-		const Token * token = sentence->tokens + i;
+		const Token * token = &sentence->tokens[i];
 		if (token->type == TOKEN_WORD) {
 			lookupPositionsUtf.push_back(sentenceLengthUtf);
 			lookupPositionsUcs.push_back(sentenceLengthUcs);

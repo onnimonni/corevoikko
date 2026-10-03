@@ -102,7 +102,7 @@ static const Token * getTokenAndAdvance(CapitalizationContext & context) {
 		}
 	}
 	
-	const Token * token = sentence->tokens + context.currentToken;
+	const Token * token = &sentence->tokens[context.currentToken];
 	++context.currentToken;
 	if (sentence->tokenCount == context.currentToken) {
 		context.currentToken = 0;

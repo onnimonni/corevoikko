@@ -88,6 +88,8 @@ spelling/grammar result establishes privacy-law compliance or factual accuracy.
 - VOIKKO-002: grammar analysis now stores every sentence in a paragraph instead
   of truncating at 200. Sentence 201 is checked with correct original offsets,
   without the truncation-induced punctuation warning.
+- VOIKKO-001: dynamic token storage removes the 500-token sentence ceiling;
+  supported errors before and after a long sentence retain their original spans.
 
 
 ### Reviewed public sources

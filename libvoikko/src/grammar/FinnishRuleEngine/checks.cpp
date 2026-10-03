@@ -228,7 +228,7 @@ void gc_end_punctuation(VoikkoHandle * options, const Paragraph * paragraph) {
 	if (options->accept_bulleted_lists_in_gc) return;
 	
 	Sentence * sentence = paragraph->sentences[paragraph->sentenceCount - 1];
-	Token * token = sentence->tokens + (sentence->tokenCount - 1);
+	Token * token = &sentence->tokens[sentence->tokenCount - 1];
 	if (token->type == TOKEN_PUNCTUATION) return;
 	CacheEntry * e = new CacheEntry(0);
 	e->error.legacyError.error_code = GCERR_TERMINATING_PUNCTUATION_MISSING;
