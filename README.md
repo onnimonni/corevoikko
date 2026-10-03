@@ -130,6 +130,11 @@ legitimate plain-text policies (`limitation:false-negative`):
   product name `Abitreenit-`, surname `Hausen`, code 17 on bold run-in
   headings flattened into prose (`Oikeus saada pääsy tietoihisi.`), and one
   genuine source issue: a sentence ending in a URL without a full stop (code 9).
+- Correspondence guide (Kielitoimiston ohjepankki, *Sähköposti, kirje ja muut
+  viestit*): 40/42 of its correct example messages pass the `message` profile
+  after VOIKKO-022. Remaining (`limitation:message-format`): the endorsed
+  lowercase signature `t. Tuisku` after `Hyvää joulunodotusta!` gets code 7,
+  and `PS Muista kokous.` (undotted PS) gets code 6 on `Muista`.
 - Document structure (`limitation:document-structure`): the CLI applies one
   profile per file. Headings and list items need `title`/`list` profiles,
   which require structure from the source format (HTML/DOCX), not plain text.
@@ -211,6 +216,9 @@ legitimate plain-text policies (`limitation:false-negative`):
 - VOIKKO-021 (`coverage:dictionary`): `PL` (postilokero, per Kielitoimiston
   ohjepankki's lyhenneluettelo) added as an uninflected abbreviation for
   addresses such as `PL 450, 00056 Kela`; `PLL` stays rejected.
+- VOIKKO-022 (`coverage:dictionary`): `terv.` (terveisin) and `P.S.` (post
+  scriptum), both endorsed by the Kotus correspondence guide, added; `Terv.
+  Elias Laine` and `P.S. Muista kokous.` no longer produce spelling errors.
 
 Current frozen-corpus result: **0 false positives**, **0 missed supported
 errors**, **27 detections**, **21/21 corrections**, **8 unsupported checks**.

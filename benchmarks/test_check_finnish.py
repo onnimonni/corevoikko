@@ -89,6 +89,12 @@ class TextCheckerTest(unittest.TestCase):
         self.assertEqual([], diagnostics(self.checker, "Lähetä se osoitteeseen Kela, PL 450, 00056 Kela."))
         self.assertEqual([True, False], [self.checker.spell(w) for w in ("PL", "PLL")])
 
+    def testCorrespondenceAbbreviations(self):
+        self.assertEqual([], diagnostics(self.checker, "Terv. Elias Laine"))
+        self.assertEqual([], diagnostics(self.checker, "P.S. Muista kokous."))
+        self.assertEqual([True, True, False, False],
+                         [self.checker.spell(w) for w in ("terv.", "P.S.", "terw.", "p.s.")])
+
 
 if __name__ == "__main__":
     unittest.main()

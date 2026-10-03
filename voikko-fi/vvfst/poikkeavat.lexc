@@ -25,6 +25,9 @@ LEXICON Poikkeavat_a
 [La][Xr]jjj[X][Xp]ETA[X]eta:eta	Lyhenne_a	;
 ! PL: postilokero (Kielitoimiston ohjepankki, lyhenneluettelo P); used uninflected in addresses ("PL 450").
 [La][Xr]jj[X][Xp]PL[X]pl:pl	LyhenneIlmanTaivutusta_aä	;
+! terv. (terveisin) and P.S. (post scriptum): Kielitoimiston ohjepankki, "Sähköposti, kirje ja muut viestit".
+[La][Xp]terv.[X]terv.:terv.	PisteellisenLyhenteenJatko_ä	;
+[La][Xr]jqj[X][Xp]P.S.[X]p.s.:p.s.	PisteellisenLyhenteenJatko_ä	;
 [La][Xp]h[X]h%:eissa:h%:eissa	Liitesana_a	;
 [La][Xp]h[X]h%:eineen:h%:eineen	Liitesana_a	;
 [La][Xp]h[X]h%:eina:h%:eina	Liitesana_a	;
