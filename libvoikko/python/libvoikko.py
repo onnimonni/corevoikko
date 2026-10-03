@@ -664,7 +664,8 @@ class Voikko(object):
         errorList = []
         offset = 0
         for paragraph in textUnicode.split("\n"):
-            errorList = errorList + self.__grammarParagraph(paragraph, offset, language)
+            paragraphText = paragraph[:-1] if paragraph.endswith("\r") else paragraph
+            errorList.extend(self.__grammarParagraph(paragraphText, offset, language))
             offset = offset + len(paragraph) + 1
         return errorList
 

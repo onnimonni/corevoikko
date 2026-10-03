@@ -90,6 +90,8 @@ spelling/grammar result establishes privacy-law compliance or factual accuracy.
   without the truncation-induced punctuation warning.
 - VOIKKO-001: dynamic token storage removes the 500-token sentence ceiling;
   supported errors before and after a long sentence retain their original spans.
+- VOIKKO-006: the Python binding accepts CRLF paragraph endings without feeding
+  CR to grammar rules; diagnostic spans still refer to the original input.
 
 
 ### Reviewed public sources

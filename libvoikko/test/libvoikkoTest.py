@@ -183,6 +183,12 @@ class LibvoikkoTest(unittest.TestCase):
         self.assertEqual([(1, 7, 11), (1, len(prefix + longSentence) + 8, 11)],
                          [(e.errorCode, e.startPos, e.errorLen) for e in errors])
 
+    def testGrammarErrorsPreserveCrLfOffsets(self):
+        prefix = u"Tietosuoja on tärkeää.\r\n\r\n"
+        errors = self.voikko.grammarErrors(prefix + u"Olen joten kuten.", "fi")
+        self.assertEqual([(1, len(prefix) + 5, 11)],
+                         [(e.errorCode, e.startPos, e.errorLen) for e in errors])
+
     def testAnalyze(self):
         analysisList = self.voikko.analyze(u"kansaneläkehakemus")
         self.assertEqual(1, len(analysisList))
